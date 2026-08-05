@@ -14,6 +14,9 @@ def create_app(config_name=None):
     os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
     register_extensions(app)
+    with app.app_context():
+        from app import models
+        db.create_all()
     register_blueprints(app)
     register_error_handlers(app)
     register_context_processors(app)
