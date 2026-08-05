@@ -1,0 +1,16 @@
+Booking Confirmed
+
+Hi {{ booking.user.full_name.split(' ')[0] }},
+
+Your reservation at LuxStay Hotel & Resort is confirmed.
+
+Reference:  {{ booking.reference }}
+Room:       {{ booking.room.name }}
+Check-in:   {{ booking.check_in.strftime('%A, %B %d, %Y') }}
+Check-out:  {{ booking.check_out.strftime('%A, %B %d, %Y') }}
+Guests:     {{ booking.guests }}
+Total:      ${{ '%.2f'|format(booking.total_price) }}
+
+We look forward to welcoming you.
+
+LuxStay Hotel & Resort

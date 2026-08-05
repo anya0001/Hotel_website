@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}My Bookings — {{ HOTEL_NAME }}{% endblock %}
+{% block body_class %}page-account{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="page-header__eyebrow">Account</p>
+    <h1>My Bookings</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container account-layout">
+    {% include "auth/_account_nav.html" %}
+
+    <div class="account-content">
+      <div class="tabs">
+        <a href="{{ url_for('booking.history', tab='upcoming') }}" class="tabs__tab {{ 'is-active' if tab == 'upcoming' }}">Upcoming</a>
+        <a href="{{ url_for('booking.history', tab='past') }}" class="tabs__tab {{ 'is-active' if tab == 'past' }}">Past</a>
+        <a href="{{ url_for('booking.history', tab='cancelled') }}" class="tabs__tab {{ 'is-active' if tab == 'cancelled' }}">Cancelled</a>
+      </div>
+
+      {% if bookings %}
+        <div class="booking-list">
+          {% for booking in bookings %}
+            <div class="booking-row card-panel">
+              {% if booking.room.primary_image %}
+                <img src="{{ url_for('static', filename='images/uploads/' + booking.room.primary_image.thumbnail_filename) }}" alt="{{ booking.room.name }}" class="booking-row__image">
+              {% endif %}
+              <div class="booking-row__body">
+                <div class="booking-row__header">
+                  <h3><a href="{{ url_for('hotel.room_detail', slug=booking.room.slug) }}">{{ booking.room.name }}</a></h3>
+                  <span class="badge badge--{{ {'confirmed':'success','pending':'warning','cancelled':'danger','completed':'neutral'}[booking.status] }}">{{ booking.status|capitalize }}</span>
+                </div>
+                <p class="muted-text">{{ booking.reference }} &middot; {{ booking.check_in.strftime('%b %d, %Y') }} – {{ booking.check_out.strftime('%b %d, %Y') }} &middot; {{ booking.guests }} guest{{ 's' if booking.guests > 1 }}</p>
+                <p class="booking-row__price">${{ '%.2f'|format(booking.total_price) }} total &middot; {{ booking.nights }} night{{ 's' if booking.nights > 1 }}</p>
+              </div>
+              <div class="booking-row__actions">
+                <a href="{{ url_for('booking.confirmation', reference=booking.reference) }}" class="btn btn--outline btn--sm">Details</a>
+                {% if booking.is_upcoming %}
+                  <form method="post" action="{{ url_for('booking.cancel', reference=booking.reference) }}">
+                    {{ delete_form.hidden_tag() }}
+                    <button type="submit" class="btn btn--ghost btn--sm" onclick="return confirm('Cancel this booking?')">Cancel</button>
+                  </form>
+                {% elif booking.is_past and booking.status != 'cancelled' %}
+                  <a href="{{ url_for('booking.add_review', slug=booking.room.slug) }}" class="btn btn--ghost btn--sm">Review</a>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <h3>No {{ tab }} bookings</h3>
+          <p>Ready for your next getaway?</p>
+          <a href="{{ url_for('hotel.rooms') }}" class="btn btn--primary">Browse Rooms</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "admin/_layout.html" %}
+{% from "macros/ui.html" import field %}
+{% block title %}Manage Amenities — Admin{% endblock %}
+{% block admin_title %}Amenities{% endblock %}
+
+{% block admin_content %}
+<div class="admin-form-inline card-panel">
+  <h3>Add Amenity</h3>
+  <form method="post" class="admin-form__row">
+    {{ form.hidden_tag() }}
+    {{ field(form.name, placeholder="e.g. Rooftop Pool") }}
+    {{ field(form.icon) }}
+    <button type="submit" class="btn btn--primary">Add</button>
+  </form>
+</div>
+
+<div class="card-panel">
+  <table class="admin-table">
+    <thead><tr><th>Name</th><th>Icon</th><th>Used By</th><th></th></tr></thead>
+    <tbody>
+      {% for amenity in amenities %}
+        <tr>
+          <td>{{ amenity.name }}</td>
+          <td>{{ amenity.icon }}</td>
+          <td>{{ amenity.rooms|length }} room(s)</td>
+          <td>
+            <form method="post" action="{{ url_for('admin.amenity_delete', amenity_id=amenity.id) }}" onsubmit="return confirm('Delete this amenity?')">
+              {{ delete_form.hidden_tag() }}
+              <button type="submit" class="btn btn--ghost btn--sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4" class="muted-text">No amenities yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

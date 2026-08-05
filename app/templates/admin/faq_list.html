@@ -1,0 +1,45 @@
+{% extends "admin/_layout.html" %}
+{% from "macros/ui.html" import field %}
+{% block title %}Manage FAQ — Admin{% endblock %}
+{% block admin_title %}FAQ{% endblock %}
+
+{% block admin_content %}
+<div class="card-panel">
+  <h3>Add FAQ</h3>
+  <form method="post" class="admin-form__grid" novalidate>
+    {{ form.hidden_tag() }}
+    {{ field(form.question) }}
+    {{ field(form.answer) }}
+    <div class="admin-form__row">
+      {{ field(form.category) }}
+      {{ field(form.position) }}
+    </div>
+    {{ field(form.is_published) }}
+    <button type="submit" class="btn btn--primary">Add FAQ</button>
+  </form>
+</div>
+
+<div class="card-panel">
+  <table class="admin-table">
+    <thead><tr><th>Question</th><th>Category</th><th>Order</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for item in faqs %}
+        <tr>
+          <td>{{ item.question }}</td>
+          <td>{{ item.category }}</td>
+          <td>{{ item.position }}</td>
+          <td><span class="badge badge--{{ 'success' if item.is_published else 'neutral' }}">{{ 'Published' if item.is_published else 'Draft' }}</span></td>
+          <td>
+            <form method="post" action="{{ url_for('admin.faq_delete', faq_id=item.id) }}" onsubmit="return confirm('Delete this FAQ?')">
+              {{ delete_form.hidden_tag() }}
+              <button type="submit" class="btn btn--ghost btn--sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="muted-text">No FAQs yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

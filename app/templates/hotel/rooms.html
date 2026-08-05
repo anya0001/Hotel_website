@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% from "macros/ui.html" import room_card, checkbox_group, pagination %}
+{% block title %}Rooms & Suites — {{ HOTEL_NAME }}{% endblock %}
+{% block body_class %}page-rooms{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="page-header__eyebrow">Find Your Stay</p>
+    <h1>Rooms &amp; Suites</h1>
+    <p class="page-header__lead">{{ total_results }} room type{{ 's' if total_results != 1 }} available{% if form.check_in.data and form.check_out.data %} for {{ form.check_in.data.strftime('%b %d') }} – {{ form.check_out.data.strftime('%b %d') }}{% endif %}.</p>
+  </div>
+</section>
+
+<section class="section rooms-layout">
+  <div class="container rooms-layout__grid">
+    <aside class="filters-panel">
+      <form method="get" action="{{ url_for('hotel.rooms') }}" id="filtersForm">
+        <div class="filters-panel__group">
+          <label for="check_in">Check-in</label>
+          <input type="date" id="check_in" name="check_in" value="{{ form.check_in.data or '' }}">
+        </div>
+        <div class="filters-panel__group">
+          <label for="check_out">Check-out</label>
+          <input type="date" id="check_out" name="check_out" value="{{ form.check_out.data or '' }}">
+        </div>
+        <div class="filters-panel__group">
+          <label for="guests">Guests</label>
+          <input type="number" id="guests" name="guests" min="1" max="20" value="{{ form.guests.data or 2 }}">
+        </div>
+        <div class="filters-panel__group">
+          <label for="room_type">Room Type</label>
+          <select id="room_type" name="room_type">
+            <option value="">Any type</option>
+            {% for rt in ["Standard", "Deluxe", "Suite", "Villa", "Penthouse"] %}
+              <option value="{{ rt }}" {{ 'selected' if form.room_type.data == rt }}>{{ rt }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="filters-panel__group filters-panel__group--split">
+          <div>
+            <label for="min_price">Min Price</label>
+            <input type="number" id="min_price" name="min_price" min="0" value="{{ form.min_price.data or '' }}">
+          </div>
+          <div>
+            <label for="max_price">Max Price</label>
+            <input type="number" id="max_price" name="max_price" min="0" value="{{ form.max_price.data or '' }}">
+          </div>
+        </div>
+        <div class="filters-panel__group">
+          <label for="beds">Minimum Beds</label>
+          <input type="number" id="beds" name="beds" min="1" value="{{ form.beds.data or '' }}">
+        </div>
+
+        {{ checkbox_group(form.amenities) }}
+
+        <div class="filters-panel__group">
+          <label for="sort">Sort by</label>
+          {{ form.sort(id="sort") }}
+        </div>
+
+        <button type="submit" class="btn btn--primary filters-panel__submit">Apply Filters</button>
+        <a href="{{ url_for('hotel.rooms') }}" class="filters-panel__reset">Clear all</a>
+      </form>
+    </aside>
+
+    <div class="rooms-layout__results">
+      {% if rooms %}
+        <div class="room-grid">
+          {% for room in rooms %}{{ room_card(room) }}{% endfor %}
+        </div>
+        {% set query_args = request.args.to_dict() %}
+        {% set _ = query_args.pop('page', None) %}
+        {{ pagination(page, total_pages, 'hotel.rooms', **query_args) }}
+      {% else %}
+        <div class="empty-state">
+          <h3>No rooms match your search</h3>
+          <p>Try adjusting your dates, guest count, or filters.</p>
+          <a href="{{ url_for('hotel.rooms') }}" class="btn btn--outline">Reset Filters</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

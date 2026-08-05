@@ -1,0 +1,58 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.btn {
+  @include m.button-base;
+
+  &--primary {
+    background: v.$color-primary;
+    color: v.$color-text-inverse;
+
+    &:hover {
+      background: v.$color-primary-light;
+      transform: translateY(-2px);
+      box-shadow: v.$shadow-sm;
+    }
+  }
+
+  &--accent {
+    background: v.$color-accent;
+    color: v.$color-primary-dark;
+
+    &:hover {
+      background: v.$color-accent-dark;
+      transform: translateY(-2px);
+      box-shadow: v.$shadow-sm;
+    }
+  }
+
+  &--outline {
+    background: transparent;
+    border-color: v.$color-primary;
+    color: v.$color-primary;
+
+    &:hover {
+      background: v.$color-primary;
+      color: v.$color-text-inverse;
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: v.$color-text;
+    border-color: v.$color-border;
+
+    &:hover {
+      background: v.$color-neutral-bg;
+    }
+  }
+
+  &--sm {
+    padding: 9px 20px;
+    font-size: v.$fs-xs;
+  }
+
+  &--icon {
+    padding: 9px 16px;
+  }
+}

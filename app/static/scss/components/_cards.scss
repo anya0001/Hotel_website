@@ -1,0 +1,190 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.room-card {
+  @include m.card();
+  overflow: hidden;
+  @include m.hover-lift;
+
+  &__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform v.$transition-slow;
+    }
+
+    &:hover img {
+      transform: scale(1.06);
+    }
+  }
+
+  &__media-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, v.$color-neutral-bg, v.$color-border);
+  }
+
+  &__badge {
+    position: absolute;
+    top: v.$space-3;
+    left: v.$space-3;
+
+    &--featured {
+      left: auto;
+      right: v.$space-3;
+    }
+  }
+
+  &__body {
+    padding: v.$space-5;
+  }
+
+  &__type {
+    font-size: v.$fs-xs;
+    font-weight: 700;
+    color: v.$color-accent-dark;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: v.$space-1;
+  }
+
+  &__title {
+    font-size: v.$fs-md;
+    margin-bottom: v.$space-2;
+
+    a:hover { color: v.$color-primary; }
+  }
+
+  &__meta {
+    @include m.flex(row, flex-start, center, v.$space-3);
+    font-size: v.$fs-xs;
+    color: v.$color-text-muted;
+    margin-bottom: v.$space-3;
+
+    li::after {
+      content: '';
+    }
+  }
+
+  &__footer {
+    @include m.flex(row, space-between, center);
+    margin-top: v.$space-4;
+    padding-top: v.$space-4;
+    border-top: 1px solid v.$color-border;
+  }
+
+  &__price {
+    &-old {
+      text-decoration: line-through;
+      color: v.$color-text-muted;
+      font-size: v.$fs-xs;
+      margin-right: v.$space-1;
+    }
+
+    &-current {
+      font-family: v.$font-heading;
+      font-size: v.$fs-lg;
+      font-weight: 700;
+      color: v.$color-primary;
+    }
+
+    &-unit {
+      font-size: v.$fs-xs;
+      color: v.$color-text-muted;
+    }
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: v.$radius-pill;
+  font-size: v.$fs-xs;
+  font-weight: 700;
+
+  &--accent { background: v.$color-accent; color: v.$color-primary-dark; }
+  &--dark { background: v.$color-primary-dark; color: v.$color-text-inverse; }
+  &--success { background: v.$color-success-bg; color: v.$color-success; }
+  &--warning { background: v.$color-warning-bg; color: v.$color-warning; }
+  &--danger { background: v.$color-danger-bg; color: v.$color-danger; }
+  &--neutral { background: v.$color-neutral-bg; color: v.$color-text-muted; }
+}
+
+.star-rating {
+  @include m.flex(row, flex-start, center, 2px);
+  margin-bottom: v.$space-3;
+
+  &__star {
+    color: v.$color-border-strong;
+    font-size: v.$fs-sm;
+
+    &.is-filled {
+      color: v.$color-accent;
+    }
+  }
+
+  &__count {
+    font-size: v.$fs-xs;
+    color: v.$color-text-muted;
+    margin-left: v.$space-1;
+  }
+
+  &--muted {
+    color: v.$color-text-muted;
+    font-size: v.$fs-xs;
+  }
+}
+
+.testimonial-card {
+  @include m.card();
+  padding: v.$space-6;
+
+  p {
+    font-family: v.$font-heading;
+    font-size: v.$fs-md;
+    font-style: italic;
+    margin: v.$space-3 0 v.$space-4;
+  }
+
+  footer {
+    @include m.flex(column, flex-start, flex-start, 2px);
+  }
+
+  &__name {
+    font-weight: 700;
+    font-size: v.$fs-sm;
+  }
+
+  &__room {
+    font-size: v.$fs-xs;
+    color: v.$color-text-muted;
+  }
+}
+
+.promo-card {
+  @include m.glass-dark(0.85, 12px);
+  background: linear-gradient(135deg, v.$color-primary, v.$color-primary-dark);
+  color: v.$color-text-inverse;
+  border-radius: v.$radius-md;
+  padding: v.$space-5;
+
+  h3 { color: v.$color-text-inverse; margin-bottom: v.$space-2; }
+  p { color: rgba(255, 255, 255, 0.8); font-size: v.$fs-sm; margin-bottom: v.$space-3; }
+
+  &__code {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: v.$radius-pill;
+    font-size: v.$fs-xs;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+}

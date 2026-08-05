@@ -1,0 +1,36 @@
+{% extends "admin/_layout.html" %}
+{% from "macros/ui.html" import flask_pagination %}
+{% block title %}Manage Users — Admin{% endblock %}
+{% block admin_title %}Users{% endblock %}
+
+{% block admin_content %}
+<div class="card-panel">
+  <table class="admin-table">
+    <thead>
+      <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for user in pagination.items %}
+        <tr>
+          <td>{{ user.full_name }}</td>
+          <td>{{ user.email }}</td>
+          <td><span class="badge badge--{{ 'dark' if user.is_admin else 'neutral' }}">{{ user.role|capitalize }}</span></td>
+          <td><span class="badge badge--{{ 'success' if user.is_active else 'danger' }}">{{ 'Active' if user.is_active else 'Disabled' }}</span></td>
+          <td>{{ user.created_at.strftime('%b %d, %Y') }}</td>
+          <td class="admin-table__actions">
+            <a href="{{ url_for('admin.user_edit', user_id=user.id) }}" class="btn btn--outline btn--sm">Edit</a>
+            <form method="post" action="{{ url_for('admin.user_delete', user_id=user.id) }}" onsubmit="return confirm('Delete this user?')">
+              {{ delete_form.hidden_tag() }}
+              <button type="submit" class="btn btn--ghost btn--sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="muted-text">No users found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{{ flask_pagination(pagination, 'admin.users_list') }}
+{% endblock %}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial, sans-serif; background:#F7F7F7; padding:32px; color:#1F2A33;">
+  <div style="max-width:520px; margin:0 auto; background:#ffffff; border-radius:12px; padding:32px;">
+    <h2 style="color:#0A4D68;">Booking Confirmed</h2>
+    <p>Hi {{ booking.user.full_name.split(' ')[0] }},</p>
+    <p>Your reservation at LuxStay Hotel &amp; Resort is confirmed. Here are your details:</p>
+    <table style="width:100%; border-collapse:collapse; margin:24px 0;">
+      <tr><td style="padding:6px 0; color:#8A8A8A;">Reference</td><td style="padding:6px 0; text-align:right;"><strong>{{ booking.reference }}</strong></td></tr>
+      <tr><td style="padding:6px 0; color:#8A8A8A;">Room</td><td style="padding:6px 0; text-align:right;">{{ booking.room.name }}</td></tr>
+      <tr><td style="padding:6px 0; color:#8A8A8A;">Check-in</td><td style="padding:6px 0; text-align:right;">{{ booking.check_in.strftime('%A, %B %d, %Y') }}</td></tr>
+      <tr><td style="padding:6px 0; color:#8A8A8A;">Check-out</td><td style="padding:6px 0; text-align:right;">{{ booking.check_out.strftime('%A, %B %d, %Y') }}</td></tr>
+      <tr><td style="padding:6px 0; color:#8A8A8A;">Guests</td><td style="padding:6px 0; text-align:right;">{{ booking.guests }}</td></tr>
+      <tr><td style="padding:6px 0; color:#8A8A8A;">Total</td><td style="padding:6px 0; text-align:right;"><strong>${{ '%.2f'|format(booking.total_price) }}</strong></td></tr>
+    </table>
+    <p>We look forward to welcoming you.</p>
+    <p style="color:#8A8A8A; font-size:13px;">LuxStay Hotel &amp; Resort</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.admin-layout {
+  @include m.flex(row, flex-start, stretch, 0);
+  min-height: calc(100vh - #{v.$header-height});
+}
+
+.admin-sidebar {
+  display: none;
+  width: 240px;
+  flex-shrink: 0;
+  background: v.$color-primary-dark;
+  color: rgba(255, 255, 255, 0.85);
+  padding: v.$space-5 v.$space-4;
+
+  @include m.respond(lg) {
+    display: block;
+  }
+
+  &__brand {
+    @include m.flex(row, flex-start, center, v.$space-2);
+    color: v.$color-text-inverse;
+    font-family: v.$font-heading;
+    font-weight: 700;
+    font-size: v.$fs-lg;
+    margin-bottom: v.$space-6;
+
+    .site-header__logo-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: v.$color-accent;
+      color: v.$color-primary-dark;
+      @include m.flex(row, center, center);
+    }
+  }
+
+  &__nav {
+    @include m.flex(column, flex-start, stretch, v.$space-1);
+
+    a {
+      padding: v.$space-3 v.$space-3;
+      border-radius: v.$radius-sm;
+      font-size: v.$fs-sm;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.75);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: v.$color-text-inverse;
+      }
+
+      &.is-active {
+        background: v.$color-accent;
+        color: v.$color-primary-dark;
+      }
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      margin: v.$space-3 0;
+    }
+  }
+}
+
+.admin-main {
+  flex: 1;
+  min-width: 0;
+  background: v.$color-bg;
+}
+
+.admin-topbar {
+  @include m.flex(row, space-between, center);
+  padding: v.$space-5 v.$space-6;
+  background: v.$color-surface;
+  border-bottom: 1px solid v.$color-border;
+
+  h1 {
+    font-size: v.$fs-xl;
+    margin: 0;
+  }
+
+  &__user {
+    font-size: v.$fs-sm;
+    font-weight: 600;
+    color: v.$color-text-muted;
+  }
+}
+
+.admin-content {
+  padding: v.$space-6;
+
+  &__toolbar {
+    @include m.flex(row, space-between, center);
+    margin-bottom: v.$space-5;
+    flex-wrap: wrap;
+    gap: v.$space-3;
+  }
+}
+
+.admin-panel-grid {
+  @include m.grid(1, v.$space-5);
+  margin-bottom: v.$space-5;
+
+  @include m.respond(lg) {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.admin-filter-pills {
+  @include m.flex(row, flex-start, center, v.$space-2);
+  flex-wrap: wrap;
+
+  a {
+    padding: v.$space-2 v.$space-4;
+    border-radius: v.$radius-pill;
+    background: v.$color-surface;
+    border: 1px solid v.$color-border;
+    font-size: v.$fs-sm;
+    font-weight: 600;
+
+    &.is-active {
+      background: v.$color-primary;
+      color: v.$color-text-inverse;
+      border-color: v.$color-primary;
+    }
+  }
+}

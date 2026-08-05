@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from "macros/ui.html" import field %}
+{% block title %}Sign Up — {{ HOTEL_NAME }}{% endblock %}
+{% block body_class %}page-auth{% endblock %}
+
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-layout__media" aria-hidden="true"></div>
+  <div class="auth-layout__panel">
+    <div class="auth-card">
+      <h1>Create Your Account</h1>
+      <p class="auth-card__lead">Book faster and manage your stays in one place.</p>
+
+      <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        {{ field(form.full_name, placeholder="Jane Doe") }}
+        {{ field(form.email, placeholder="you@example.com") }}
+        {{ field(form.phone, placeholder="Optional") }}
+        {{ field(form.password, placeholder="At least 8 characters") }}
+        {{ field(form.confirm_password, placeholder="Re-enter your password") }}
+        <button type="submit" class="btn btn--primary" style="width:100%">Create Account</button>
+      </form>
+
+      <p class="auth-card__footer">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

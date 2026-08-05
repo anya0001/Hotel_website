@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Booking Confirmed — {{ HOTEL_NAME }}{% endblock %}
+{% block body_class %}page-booking-confirmation{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container container--narrow">
+    <div class="confirmation-card card-panel">
+      <div class="confirmation-card__icon">&#10003;</div>
+      <h1>Booking Confirmed!</h1>
+      <p class="muted-text">A confirmation email has been sent to {{ booking.user.email }}.</p>
+
+      <dl class="confirmation-details">
+        <div><dt>Reference</dt><dd>{{ booking.reference }}</dd></div>
+        <div><dt>Room</dt><dd>{{ booking.room.name }}</dd></div>
+        <div><dt>Check-in</dt><dd>{{ booking.check_in.strftime('%A, %B %d, %Y') }}</dd></div>
+        <div><dt>Check-out</dt><dd>{{ booking.check_out.strftime('%A, %B %d, %Y') }}</dd></div>
+        <div><dt>Guests</dt><dd>{{ booking.guests }}</dd></div>
+        <div><dt>Nights</dt><dd>{{ booking.nights }}</dd></div>
+        <div><dt>Total</dt><dd>${{ '%.2f'|format(booking.total_price) }}</dd></div>
+        <div><dt>Status</dt><dd><span class="badge badge--{{ 'success' if booking.status == 'confirmed' else 'neutral' }}">{{ booking.status|capitalize }}</span></dd></div>
+      </dl>
+
+      <div class="confirmation-card__actions">
+        <a href="{{ url_for('booking.history') }}" class="btn btn--primary">View My Bookings</a>
+        <a href="{{ url_for('hotel.rooms') }}" class="btn btn--outline">Browse More Rooms</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

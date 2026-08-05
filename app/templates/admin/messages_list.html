@@ -1,0 +1,27 @@
+{% extends "admin/_layout.html" %}
+{% from "macros/ui.html" import flask_pagination %}
+{% block title %}Contact Messages — Admin{% endblock %}
+{% block admin_title %}Messages{% endblock %}
+
+{% block admin_content %}
+<div class="card-panel">
+  <table class="admin-table">
+    <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Received</th></tr></thead>
+    <tbody>
+      {% for message in pagination.items %}
+        <tr>
+          <td>{{ message.name }}</td>
+          <td><a href="mailto:{{ message.email }}">{{ message.email }}</a></td>
+          <td>{{ message.subject or '—' }}</td>
+          <td class="admin-table__review">{{ message.message[:100] }}{{ '…' if message.message|length > 100 }}</td>
+          <td>{{ message.created_at.strftime('%b %d, %Y') }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="muted-text">No messages yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{{ flask_pagination(pagination, 'admin.messages_list') }}
+{% endblock %}

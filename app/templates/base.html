@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}{{ HOTEL_NAME }}{% endblock %}</title>
+<meta name="description" content="{% block meta_description %}{{ HOTEL_NAME }} — a luxury oceanfront hotel offering premium rooms, suites and villas.{% endblock %}">
+
+<!-- Open Graph -->
+<meta property="og:title" content="{% block og_title %}{{ HOTEL_NAME }}{% endblock %}">
+<meta property="og:description" content="{% block og_description %}Luxury hotel booking — rooms, suites and villas by the ocean.{% endblock %}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{{ url_for('static', filename='images/og-cover.jpg') }}">
+
+<link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+{% block head_extra %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header" id="site-header">
+  <div class="container site-header__inner">
+    <a class="site-header__logo" href="{{ url_for('hotel.home') }}">
+      <span class="site-header__logo-mark">L</span>
+      <span class="site-header__logo-text">LuxStay</span>
+    </a>
+
+    <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+      <ul>
+        <li><a href="{{ url_for('hotel.home') }}" class="{{ 'is-active' if request.endpoint == 'hotel.home' }}">Home</a></li>
+        <li><a href="{{ url_for('hotel.rooms') }}" class="{{ 'is-active' if request.endpoint == 'hotel.rooms' }}">Rooms &amp; Suites</a></li>
+        <li><a href="{{ url_for('hotel.gallery') }}" class="{{ 'is-active' if request.endpoint == 'hotel.gallery' }}">Gallery</a></li>
+        <li><a href="{{ url_for('hotel.about') }}" class="{{ 'is-active' if request.endpoint == 'hotel.about' }}">About</a></li>
+        <li><a href="{{ url_for('hotel.faq') }}" class="{{ 'is-active' if request.endpoint == 'hotel.faq' }}">FAQ</a></li>
+        <li><a href="{{ url_for('hotel.contact') }}" class="{{ 'is-active' if request.endpoint == 'hotel.contact' }}">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      {% if current_user.is_authenticated %}
+        <div class="user-menu">
+          <button class="user-menu__trigger" id="userMenuTrigger" aria-haspopup="true" aria-expanded="false">
+            {% if current_user.avatar_url %}
+              <img src="{{ url_for('static', filename='images/uploads/' + current_user.avatar_url) }}" alt="" class="user-menu__avatar">
+            {% else %}
+              <span class="user-menu__avatar user-menu__avatar--placeholder">{{ current_user.full_name[0] }}</span>
+            {% endif %}
+            <span class="user-menu__name">{{ current_user.full_name.split(' ')[0] }}</span>
+          </button>
+          <div class="user-menu__dropdown" id="userMenuDropdown">
+            {% if current_user.is_admin %}
+              <a href="{{ url_for('admin.dashboard') }}">Admin Dashboard</a>
+              <hr>
+            {% endif %}
+            <a href="{{ url_for('auth.profile') }}">My Profile</a>
+            <a href="{{ url_for('booking.history') }}">My Bookings</a>
+            <a href="{{ url_for('booking.favorites') }}">Saved Rooms</a>
+            <a href="{{ url_for('booking.notifications') }}">Notifications</a>
+            <hr>
+            <a href="{{ url_for('auth.logout') }}">Log Out</a>
+          </div>
+        </div>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn--ghost btn--sm">Log In</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn--primary btn--sm">Sign Up</a>
+      {% endif %}
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main-content">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-stack" id="flashStack">
+        {% for category, message in messages %}
+          <div class="flash-message flash-message--{{ category }}" role="alert">
+            <span>{{ message }}</span>
+            <button type="button" class="flash-message__close" aria-label="Dismiss">&times;</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a class="site-header__logo" href="{{ url_for('hotel.home') }}">
+        <span class="site-header__logo-mark">L</span>
+        <span class="site-header__logo-text">LuxStay</span>
+      </a>
+      <p>Oceanfront luxury, thoughtfully designed. Rooms, suites and villas for every kind of escape.</p>
+      <div class="site-footer__social">
+        <a href="#" aria-label="Instagram">IG</a>
+        <a href="#" aria-label="Facebook">FB</a>
+        <a href="#" aria-label="Twitter">X</a>
+      </div>
+    </div>
+
+    <div class="site-footer__col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="{{ url_for('hotel.rooms') }}">Rooms &amp; Suites</a></li>
+        <li><a href="{{ url_for('hotel.gallery') }}">Gallery</a></li>
+        <li><a href="{{ url_for('hotel.about') }}">About Us</a></li>
+        <li><a href="{{ url_for('hotel.faq') }}">FAQ</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__col">
+      <h4>Account</h4>
+      <ul>
+        <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+        <li><a href="{{ url_for('auth.register') }}">Create Account</a></li>
+        <li><a href="{{ url_for('booking.history') }}">My Bookings</a></li>
+        <li><a href="{{ url_for('hotel.contact') }}">Contact Support</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__col">
+      <h4>Contact</h4>
+      <ul class="site-footer__contact">
+        <li>{{ HOTEL_ADDRESS }}</li>
+        <li><a href="tel:{{ HOTEL_PHONE }}">{{ HOTEL_PHONE }}</a></li>
+        <li><a href="mailto:{{ HOTEL_EMAIL }}">{{ HOTEL_EMAIL }}</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__col site-footer__newsletter">
+      <h4>Stay Updated</h4>
+      <p>Exclusive offers, straight to your inbox.</p>
+      <form action="{{ url_for('hotel.newsletter') }}" method="post" class="newsletter-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="email" name="email" placeholder="Your email address" required>
+        <button type="submit" class="btn btn--accent btn--sm">Join</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="site-footer__bottom">
+    <div class="container site-footer__bottom-inner">
+      <p>&copy; {{ today.year }} {{ HOTEL_NAME }}. All rights reserved.</p>
+      <p>Crafted with care for unforgettable stays.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/icons.js') }}" defer></script>
+{% block scripts_extra %}{% endblock %}
+</body>
+</html>

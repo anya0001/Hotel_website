@@ -1,0 +1,23 @@
+{% extends "admin/_layout.html" %}
+{% from "macros/ui.html" import field %}
+{% block title %}Homepage Settings — Admin{% endblock %}
+{% block admin_title %}Homepage Content{% endblock %}
+
+{% block admin_content %}
+<form method="post" class="card-panel admin-form" novalidate>
+  {{ form.hidden_tag() }}
+  <h3>Hero Section</h3>
+  {{ field(form.hero_title) }}
+  {{ field(form.hero_subtitle) }}
+
+  <h3>Statistics Strip</h3>
+  <div class="admin-form__grid admin-form__grid--4">
+    <div class="admin-form__row">{{ field(form.stat_1_value) }}{{ field(form.stat_1_label) }}</div>
+    <div class="admin-form__row">{{ field(form.stat_2_value) }}{{ field(form.stat_2_label) }}</div>
+    <div class="admin-form__row">{{ field(form.stat_3_value) }}{{ field(form.stat_3_label) }}</div>
+    <div class="admin-form__row">{{ field(form.stat_4_value) }}{{ field(form.stat_4_label) }}</div>
+  </div>
+
+  <button type="submit" class="btn btn--primary">Save Changes</button>
+</form>
+{% endblock %}

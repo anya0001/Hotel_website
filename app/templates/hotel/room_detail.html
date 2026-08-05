@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% from "macros/ui.html" import stars, room_card %}
+{% block title %}{{ room.name }} — {{ HOTEL_NAME }}{% endblock %}
+{% block meta_description %}{{ room.short_description or room.description[:150] }}{% endblock %}
+{% block body_class %}page-room-detail{% endblock %}
+
+{% block content %}
+<section class="room-gallery" data-room-gallery>
+  <div class="room-gallery__main">
+    {% if room.images %}
+      <img src="{{ url_for('static', filename='images/uploads/' + room.images[0].filename) }}" alt="{{ room.name }}" id="galleryMainImage">
+    {% else %}
+      <div class="room-gallery__placeholder"></div>
+    {% endif %}
+  </div>
+  {% if room.images|length > 1 %}
+  <div class="room-gallery__thumbs">
+    {% for image in room.images %}
+      <button type="button" class="room-gallery__thumb {{ 'is-active' if loop.first }}"
+              data-full="{{ url_for('static', filename='images/uploads/' + image.filename) }}">
+        <img src="{{ url_for('static', filename='images/uploads/' + (image.thumbnail_filename or image.filename)) }}" alt="{{ image.alt_text or room.name }}">
+      </button>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+
+<section class="section room-detail-layout">
+  <div class="container room-detail-layout__grid">
+
+    <div class="room-detail-main">
+      <div class="room-detail-header">
+        <div>
+          <p class="room-detail-header__type">{{ room.room_type }}</p>
+          <h1>{{ room.name }}</h1>
+          {% if room.review_count > 0 %}
+            {{ stars(room.average_rating, room.review_count) }}
+          {% endif %}
+        </div>
+        {% if current_user.is_authenticated %}
+          <form method="post" action="{{ url_for('booking.toggle_favorite', room_id=room.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn--ghost btn--icon" aria-label="Save room">&#9825; Save</button>
+          </form>
+        {% endif %}
+      </div>
+
+      <ul class="room-detail-facts">
+        <li><strong>{{ room.max_guests }}</strong> Guests</li>
+        <li><strong>{{ room.bedrooms }}</strong> Bedroom{{ 's' if room.bedrooms > 1 }}</li>
+        <li><strong>{{ room.beds }}</strong> Bed{{ 's' if room.beds > 1 }}</li>
+        {% if room.size_sqm %}<li><strong>{{ room.size_sqm }}</strong> m&sup2;</li>{% endif %}
+      </ul>
+
+      <div class="room-detail-section">
+        <h2>About This Room</h2>
+        <p>{{ room.description }}</p>
+      </div>
+
+      <div class="room-detail-section">
+        <h2>Amenities</h2>
+        <div class="amenity-grid amenity-grid--compact">
+          {% for amenity in room.amenities %}
+            <div class="amenity-tile">
+              <span class="amenity-tile__icon" data-icon="{{ amenity.icon }}"></span>
+              <span class="amenity-tile__label">{{ amenity.name }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="room-detail-section">
+        <h2>Availability</h2>
+        <div class="availability-calendar" id="availabilityCalendar" data-room-id="{{ room.id }}">
+          <p class="availability-calendar__hint">Loading availability&hellip;</p>
+        </div>
+      </div>
+
+      <div class="room-detail-section">
+        <h2>Guest Reviews ({{ room.review_count }})</h2>
+        {% if reviews %}
+          <div class="review-list">
+            {% for review in reviews %}
+              <div class="review-card">
+                {{ stars(review.rating) }}
+                {% if review.title %}<h4>{{ review.title }}</h4>{% endif %}
+                <p>{{ review.body }}</p>
+                <footer>{{ review.user.full_name }} &middot; {{ review.created_at.strftime('%B %Y') }}</footer>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="muted-text">No reviews yet — be the first to share your experience.</p>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+          <a href="{{ url_for('booking.add_review', slug=room.slug) }}" class="btn btn--outline btn--sm">Write a Review</a>
+        {% endif %}
+      </div>
+
+      <div class="room-detail-section">
+        <h2>Location</h2>
+        <div class="map-embed">
+          <iframe title="Room location map" loading="lazy"
+                  src="https://www.google.com/maps?q={{ HOTEL_LAT }},{{ HOTEL_LNG }}&z=15&output=embed"
+                  width="100%" height="320" style="border:0;" allowfullscreen referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+
+      <div class="room-detail-section">
+        <h2>Policies</h2>
+        <ul class="policy-list">
+          <li>Check-in from 3:00 PM · Check-out by 11:00 AM</li>
+          <li>Free cancellation up to 48 hours before check-in</li>
+          <li>No smoking · Pets allowed in select rooms only</li>
+          <li>Valid photo ID required at check-in</li>
+        </ul>
+      </div>
+    </div>
+
+    <aside class="booking-panel" id="bookingPanel" data-room-id="{{ room.id }}" data-max-guests="{{ room.max_guests }}" data-price="{{ room.effective_price }}">
+      <div class="booking-panel__price">
+        {% if room.discount_percent > 0 %}
+          <span class="booking-panel__price-old">${{ '%.0f'|format(room.price_per_night) }}</span>
+        {% endif %}
+        <span class="booking-panel__price-current">${{ '%.0f'|format(room.effective_price) }}</span>
+        <span class="booking-panel__price-unit">/ night</span>
+      </div>
+
+      {% if current_user.is_authenticated %}
+        <form method="get" action="{{ url_for('booking.new_booking', slug=room.slug) }}" class="booking-panel__form">
+          <div class="form-field">
+            <label for="bp_check_in">Check-in</label>
+            <input type="date" id="bp_check_in" name="check_in" required min="{{ today.isoformat() }}">
+          </div>
+          <div class="form-field">
+            <label for="bp_check_out">Check-out</label>
+            <input type="date" id="bp_check_out" name="check_out" required min="{{ today.isoformat() }}">
+          </div>
+          <div class="form-field">
+            <label for="bp_guests">Guests</label>
+            <input type="number" id="bp_guests" name="guests" min="1" max="{{ room.max_guests }}" value="2">
+          </div>
+          <p class="booking-panel__estimate" id="bookingEstimate"></p>
+          <button type="submit" class="btn btn--accent booking-panel__submit">Reserve Now</button>
+        </form>
+      {% else %}
+        <p class="muted-text">Please log in to book this room.</p>
+        <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn--primary" style="width:100%">Log In to Book</a>
+      {% endif %}
+      <p class="booking-panel__note">You won't be charged yet — review details on the next step.</p>
+    </aside>
+
+  </div>
+</section>
+
+{% if related_rooms %}
+<section class="section section--muted">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-heading__eyebrow">You Might Also Like</p>
+      <h2 class="section-heading__title">Similar Rooms</h2>
+    </div>
+    <div class="room-grid">
+      {% for r in related_rooms %}{{ room_card(r) }}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/room-detail.js') }}" defer></script>
+{% endblock %}

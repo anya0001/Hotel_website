@@ -1,0 +1,154 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.stat-card-grid {
+  @include m.grid(2, v.$space-4);
+  margin-bottom: v.$space-6;
+
+  @include m.respond(md) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat-card {
+  @include m.card();
+  padding: v.$space-5;
+
+  &__label {
+    font-size: v.$fs-xs;
+    color: v.$color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: v.$space-2;
+  }
+
+  &__value {
+    font-family: v.$font-heading;
+    font-size: v.$fs-xl;
+    font-weight: 700;
+    color: v.$color-primary;
+  }
+}
+
+.admin-chart-panel canvas {
+  width: 100% !important;
+}
+
+.admin-list li {
+  @include m.flex(row, space-between, center);
+  padding: v.$space-3 0;
+  border-bottom: 1px solid v.$color-border;
+  font-size: v.$fs-sm;
+
+  &:last-child { border-bottom: none; }
+}
+
+.admin-table {
+  th, td {
+    text-align: left;
+    padding: v.$space-3 v.$space-3;
+    font-size: v.$fs-sm;
+    border-bottom: 1px solid v.$color-border;
+  }
+
+  th {
+    color: v.$color-text-muted;
+    text-transform: uppercase;
+    font-size: v.$fs-xs;
+    letter-spacing: 0.04em;
+  }
+
+  &__room {
+    @include m.flex(row, flex-start, center, v.$space-3);
+
+    img {
+      width: 44px;
+      height: 44px;
+      border-radius: v.$radius-sm;
+      object-fit: cover;
+    }
+  }
+
+  &__actions {
+    @include m.flex(row, flex-end, center, v.$space-2);
+  }
+
+  &__review {
+    max-width: 320px;
+    color: v.$color-text-muted;
+  }
+}
+
+.inline-status-form select {
+  padding: 8px 10px;
+  border-radius: v.$radius-sm;
+  border: 1px solid v.$color-border;
+  font-size: v.$fs-xs;
+}
+
+.admin-form {
+  &__grid {
+    @include m.grid(1, v.$space-4);
+
+    &--4 {
+      @include m.respond(md) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  }
+
+  &__row {
+    @include m.flex(row, flex-start, flex-start, v.$space-3);
+    flex-wrap: wrap;
+
+    > * { flex: 1; min-width: 160px; }
+  }
+
+  &--narrow {
+    max-width: 480px;
+  }
+}
+
+.admin-form-inline {
+  margin-bottom: v.$space-5;
+}
+
+.admin-image-grid {
+  @include m.grid(2, v.$space-3);
+  margin-top: v.$space-4;
+
+  @include m.respond(md) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  &--large {
+    @include m.respond(lg) {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+
+  &__item {
+    position: relative;
+    border-radius: v.$radius-sm;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+  }
+
+  &__remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(10, 20, 30, 0.7);
+    color: v.$color-text-inverse;
+    font-size: 1rem;
+    line-height: 1;
+  }
+}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "macros/ui.html" import field %}
+{% block title %}Review {{ room.name }} — {{ HOTEL_NAME }}{% endblock %}
+{% block body_class %}page-account{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="page-header__eyebrow">Share Your Experience</p>
+    <h1>Review: {{ room.name }}</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container--narrow">
+    <form method="post" class="card-panel" novalidate>
+      {{ form.hidden_tag() }}
+      {{ field(form.rating) }}
+      {{ field(form.title, placeholder="Sum up your stay in a few words") }}
+      {{ field(form.body, placeholder="What did you love? What could we improve?") }}
+      <button type="submit" class="btn btn--primary">Submit Review</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

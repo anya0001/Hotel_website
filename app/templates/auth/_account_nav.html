@@ -1,0 +1,7 @@
+<aside class="account-nav">
+  <a href="{{ url_for('auth.profile') }}" class="{{ 'is-active' if request.endpoint == 'auth.profile' }}">Profile</a>
+  <a href="{{ url_for('auth.change_password') }}" class="{{ 'is-active' if request.endpoint == 'auth.change_password' }}">Change Password</a>
+  <a href="{{ url_for('booking.history') }}" class="{{ 'is-active' if request.endpoint == 'booking.history' }}">My Bookings</a>
+  <a href="{{ url_for('booking.favorites') }}" class="{{ 'is-active' if request.endpoint == 'booking.favorites' }}">Saved Rooms</a>
+  <a href="{{ url_for('booking.notifications') }}" class="{{ 'is-active' if request.endpoint == 'booking.notifications' }}">Notifications</a>
+</aside>

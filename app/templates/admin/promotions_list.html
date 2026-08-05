@@ -1,0 +1,51 @@
+{% extends "admin/_layout.html" %}
+{% from "macros/ui.html" import field %}
+{% block title %}Manage Promotions — Admin{% endblock %}
+{% block admin_title %}Promotions{% endblock %}
+
+{% block admin_content %}
+<div class="card-panel">
+  <h3>Create Promotion</h3>
+  <form method="post" enctype="multipart/form-data" class="admin-form__grid" novalidate>
+    {{ form.hidden_tag() }}
+    {{ field(form.title) }}
+    {{ field(form.description) }}
+    <div class="admin-form__row">
+      {{ field(form.code, placeholder="e.g. SUMMER20") }}
+      {{ field(form.discount_percent) }}
+    </div>
+    <div class="admin-form__row">
+      {{ field(form.starts_on) }}
+      {{ field(form.ends_on) }}
+    </div>
+    {{ field(form.image) }}
+    {{ field(form.is_active) }}
+    <button type="submit" class="btn btn--primary">Create Promotion</button>
+  </form>
+</div>
+
+<div class="card-panel">
+  <table class="admin-table">
+    <thead><tr><th>Title</th><th>Code</th><th>Discount</th><th>Valid</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for promo in promotions %}
+        <tr>
+          <td>{{ promo.title }}</td>
+          <td>{{ promo.code or '—' }}</td>
+          <td>{{ promo.discount_percent }}%</td>
+          <td>{{ promo.starts_on.strftime('%b %d') if promo.starts_on else 'Any' }} – {{ promo.ends_on.strftime('%b %d, %Y') if promo.ends_on else 'Ongoing' }}</td>
+          <td><span class="badge badge--{{ 'success' if promo.is_currently_valid else 'neutral' }}">{{ 'Live' if promo.is_currently_valid else 'Inactive' }}</span></td>
+          <td>
+            <form method="post" action="{{ url_for('admin.promotion_delete', promo_id=promo.id) }}" onsubmit="return confirm('Delete this promotion?')">
+              {{ delete_form.hidden_tag() }}
+              <button type="submit" class="btn btn--ghost btn--sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="muted-text">No promotions yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

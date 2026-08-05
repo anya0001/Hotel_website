@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block body_class %}page-admin{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar__brand">
+      <span class="site-header__logo-mark">L</span> Admin Panel
+    </div>
+    <nav class="admin-sidebar__nav">
+      <a href="{{ url_for('admin.dashboard') }}" class="{{ 'is-active' if request.endpoint == 'admin.dashboard' }}">Dashboard</a>
+      <a href="{{ url_for('admin.rooms_list') }}" class="{{ 'is-active' if request.endpoint in ['admin.rooms_list','admin.room_new','admin.room_edit'] }}">Rooms</a>
+      <a href="{{ url_for('admin.bookings_list') }}" class="{{ 'is-active' if request.endpoint == 'admin.bookings_list' }}">Bookings</a>
+      <a href="{{ url_for('admin.users_list') }}" class="{{ 'is-active' if request.endpoint in ['admin.users_list','admin.user_edit'] }}">Users</a>
+      <a href="{{ url_for('admin.reviews_list') }}" class="{{ 'is-active' if request.endpoint == 'admin.reviews_list' }}">Reviews</a>
+      <a href="{{ url_for('admin.gallery_list') }}" class="{{ 'is-active' if request.endpoint == 'admin.gallery_list' }}">Gallery</a>
+      <a href="{{ url_for('admin.amenities_list') }}" class="{{ 'is-active' if request.endpoint == 'admin.amenities_list' }}">Amenities</a>
+      <a href="{{ url_for('admin.promotions_list') }}" class="{{ 'is-active' if request.endpoint == 'admin.promotions_list' }}">Promotions</a>
+      <a href="{{ url_for('admin.faq_list') }}" class="{{ 'is-active' if request.endpoint == 'admin.faq_list' }}">FAQ</a>
+      <a href="{{ url_for('admin.homepage_settings') }}" class="{{ 'is-active' if request.endpoint == 'admin.homepage_settings' }}">Homepage</a>
+      <a href="{{ url_for('admin.messages_list') }}" class="{{ 'is-active' if request.endpoint == 'admin.messages_list' }}">Messages</a>
+      <hr>
+      <a href="{{ url_for('hotel.home') }}">&larr; Back to Site</a>
+    </nav>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <h1>{% block admin_title %}Dashboard{% endblock %}</h1>
+      <div class="admin-topbar__user">{{ current_user.full_name }}</div>
+    </header>
+    <div class="admin-content">
+      {% block admin_content %}{% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}

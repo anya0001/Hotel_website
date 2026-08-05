@@ -1,0 +1,133 @@
+@use 'variables' as v;
+
+// Responsive breakpoints -----------------------------------------------
+@mixin respond($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: v.$bp-sm) { @content; }
+  } @else if $breakpoint == md {
+    @media (min-width: v.$bp-md) { @content; }
+  } @else if $breakpoint == lg {
+    @media (min-width: v.$bp-lg) { @content; }
+  } @else if $breakpoint == xl {
+    @media (min-width: v.$bp-xl) { @content; }
+  } @else if $breakpoint == xxl {
+    @media (min-width: v.$bp-xxl) { @content; }
+  }
+}
+
+@mixin respond-down($breakpoint) {
+  @if $breakpoint == sm {
+    @media (max-width: v.$bp-sm - 1) { @content; }
+  } @else if $breakpoint == md {
+    @media (max-width: v.$bp-md - 1) { @content; }
+  } @else if $breakpoint == lg {
+    @media (max-width: v.$bp-lg - 1) { @content; }
+  } @else if $breakpoint == xl {
+    @media (max-width: v.$bp-xl - 1) { @content; }
+  }
+}
+
+// Flex / grid helpers -----------------------------------------------
+@mixin flex($direction: row, $justify: flex-start, $align: stretch, $gap: 0) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  gap: $gap;
+}
+
+@mixin grid($columns: 1, $gap: v.$space-5) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+}
+
+// Visual effects -----------------------------------------------
+@mixin glass($opacity: 0.72, $blur: 16px) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+@mixin glass-dark($opacity: 0.35, $blur: 20px) {
+  background: rgba(7, 25, 35, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+@mixin card($radius: v.$radius-md, $shadow: v.$shadow-sm) {
+  background: v.$color-surface;
+  border-radius: $radius;
+  box-shadow: $shadow;
+}
+
+@mixin hover-lift {
+  transition: transform v.$transition-base, box-shadow v.$transition-base;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: v.$shadow-md;
+  }
+}
+
+// Accessibility -----------------------------------------------
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid v.$color-accent;
+    outline-offset: 2px;
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Typography -----------------------------------------------
+@mixin heading-font {
+  font-family: v.$font-heading;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Buttons -----------------------------------------------
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-2;
+  font-family: v.$font-body;
+  font-weight: 600;
+  font-size: v.$fs-sm;
+  letter-spacing: 0.02em;
+  padding: 13px 28px;
+  border-radius: v.$radius-pill;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all v.$transition-base;
+  text-decoration: none;
+  white-space: nowrap;
+
+  @include focus-ring;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

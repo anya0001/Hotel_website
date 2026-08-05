@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Gallery — {{ HOTEL_NAME }}{% endblock %}
+{% block body_class %}page-gallery{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="page-header__eyebrow">A Glimpse Inside</p>
+    <h1>Photo Gallery</h1>
+    <p class="page-header__lead">Explore our rooms, dining, spa, and grounds through the eyes of our photographers.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    {% if categories %}
+    <div class="gallery-filters" data-gallery-filters>
+      <button type="button" class="gallery-filters__btn is-active" data-filter="all">All</button>
+      {% for cat in categories %}
+        <button type="button" class="gallery-filters__btn" data-filter="{{ cat }}">{{ cat }}</button>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="gallery-grid" data-gallery-grid>
+      {% for image in images %}
+        <figure class="gallery-grid__item" data-category="{{ image.category }}">
+          <img src="{{ url_for('static', filename='images/uploads/' + (image.thumbnail_filename or image.filename)) }}"
+               data-full="{{ url_for('static', filename='images/uploads/' + image.filename) }}"
+               alt="{{ image.caption or '' }}" loading="lazy">
+          {% if image.caption %}<figcaption>{{ image.caption }}</figcaption>{% endif %}
+        </figure>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox__close" id="lightboxClose" aria-label="Close">&times;</button>
+  <img id="lightboxImage" src="" alt="">
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/gallery.js') }}" defer></script>
+{% endblock %}

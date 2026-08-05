@@ -1,0 +1,123 @@
+{# Renders a single WTForms field with label, errors and consistent markup. #}
+{% macro field(f, placeholder=None, help_text=None, class_="") %}
+<div class="form-field {{ 'form-field--error' if f.errors else '' }} {{ class_ }}">
+  {% if f.type != 'BooleanField' %}
+    {{ f.label(class_="form-field__label") }}
+  {% endif %}
+
+  {% if f.type == 'BooleanField' %}
+    <label class="checkbox-field">
+      {{ f(class_="checkbox-field__input") }}
+      <span>{{ f.label.text }}</span>
+    </label>
+  {% elif f.type in ['SelectField', 'SelectMultipleField'] %}
+    {{ f(class_="form-field__input form-field__select") }}
+  {% elif f.type == 'TextAreaField' %}
+    {{ f(class_="form-field__input form-field__textarea", placeholder=placeholder, rows=5) }}
+  {% elif f.type == 'FileField' %}
+    {{ f(class_="form-field__input form-field__file") }}
+  {% else %}
+    {{ f(class_="form-field__input", placeholder=placeholder) }}
+  {% endif %}
+
+  {% if help_text %}<p class="form-field__help">{{ help_text }}</p>{% endif %}
+  {% for error in f.errors %}
+    <p class="form-field__error">{{ error }}</p>
+  {% endfor %}
+</div>
+{% endmacro %}
+
+{% macro checkbox_group(f) %}
+<div class="checkbox-group {{ 'form-field--error' if f.errors else '' }}">
+  {{ f.label(class_="form-field__label") }}
+  <div class="checkbox-group__options">
+    {% for subfield in f %}
+      <label class="checkbox-field">
+        {{ subfield }}
+        <span>{{ subfield.label.text }}</span>
+      </label>
+    {% endfor %}
+  </div>
+  {% for error in f.errors %}
+    <p class="form-field__error">{{ error }}</p>
+  {% endfor %}
+</div>
+{% endmacro %}
+
+{% macro stars(rating, count=None) %}
+<span class="star-rating" aria-label="{{ rating }} out of 5 stars">
+  {% for i in range(1, 6) %}
+    <span class="star-rating__star {{ 'is-filled' if i <= rating|round(0, 'floor') else '' }}">&#9733;</span>
+  {% endfor %}
+  {% if count is not none %}<span class="star-rating__count">({{ count }})</span>{% endif %}
+</span>
+{% endmacro %}
+
+{% macro pagination(page, total_pages, endpoint) %}
+{% if total_pages > 1 %}
+<nav class="pagination" aria-label="Pagination">
+  <a class="pagination__link {{ 'is-disabled' if page <= 1 }}"
+     href="{{ url_for(endpoint, page=page-1, **kwargs) if page > 1 else '#' }}" aria-label="Previous page">&larr;</a>
+
+  {% for p in range(1, total_pages + 1) %}
+    {% if p == page %}
+      <span class="pagination__link is-active">{{ p }}</span>
+    {% elif p == 1 or p == total_pages or (p >= page - 1 and p <= page + 1) %}
+      <a class="pagination__link" href="{{ url_for(endpoint, page=p, **kwargs) }}">{{ p }}</a>
+    {% elif p == 2 or p == total_pages - 1 %}
+      <span class="pagination__ellipsis">&hellip;</span>
+    {% endif %}
+  {% endfor %}
+
+  <a class="pagination__link {{ 'is-disabled' if page >= total_pages }}"
+     href="{{ url_for(endpoint, page=page+1, **kwargs) if page < total_pages else '#' }}" aria-label="Next page">&rarr;</a>
+</nav>
+{% endif %}
+{% endmacro %}
+
+{% macro flask_pagination(pagination_obj, endpoint) %}
+{{ pagination(pagination_obj.page, pagination_obj.pages if pagination_obj.pages > 0 else 1, endpoint, **kwargs) }}
+{% endmacro %}
+
+{% macro room_card(room) %}
+<article class="room-card">
+  <a href="{{ url_for('hotel.room_detail', slug=room.slug) }}" class="room-card__media">
+    {% if room.primary_image %}
+      <img src="{{ url_for('static', filename='images/uploads/' + room.primary_image.filename) }}"
+           alt="{{ room.primary_image.alt_text or room.name }}" loading="lazy">
+    {% else %}
+      <div class="room-card__media-placeholder"></div>
+    {% endif %}
+    {% if room.discount_percent > 0 %}
+      <span class="badge badge--accent room-card__badge">-{{ room.discount_percent }}%</span>
+    {% endif %}
+    {% if room.is_featured %}
+      <span class="badge badge--dark room-card__badge room-card__badge--featured">Featured</span>
+    {% endif %}
+  </a>
+  <div class="room-card__body">
+    <p class="room-card__type">{{ room.room_type }}</p>
+    <h3 class="room-card__title"><a href="{{ url_for('hotel.room_detail', slug=room.slug) }}">{{ room.name }}</a></h3>
+    <ul class="room-card__meta">
+      <li>{{ room.max_guests }} Guests</li>
+      <li>{{ room.beds }} Bed{{ 's' if room.beds > 1 }}</li>
+      {% if room.size_sqm %}<li>{{ room.size_sqm }} m&sup2;</li>{% endif %}
+    </ul>
+    {% if room.review_count > 0 %}
+      {{ stars(room.average_rating, room.review_count) }}
+    {% else %}
+      <span class="star-rating star-rating--muted">New listing</span>
+    {% endif %}
+    <div class="room-card__footer">
+      <div class="room-card__price">
+        {% if room.discount_percent > 0 %}
+          <span class="room-card__price-old">${{ '%.0f'|format(room.price_per_night) }}</span>
+        {% endif %}
+        <span class="room-card__price-current">${{ '%.0f'|format(room.effective_price) }}</span>
+        <span class="room-card__price-unit">/ night</span>
+      </div>
+      <a href="{{ url_for('hotel.room_detail', slug=room.slug) }}" class="btn btn--outline btn--sm">View Room</a>
+    </div>
+  </div>
+</article>
+{% endmacro %}

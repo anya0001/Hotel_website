@@ -1,0 +1,51 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.auth-layout {
+  @include m.grid(1, 0);
+  min-height: calc(100vh - #{v.$header-height});
+
+  @include m.respond(lg) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  &__media {
+    display: none;
+    background:
+      linear-gradient(160deg, rgba(10, 77, 104, 0.65), rgba(7, 25, 35, 0.8)),
+      radial-gradient(circle at 70% 30%, v.$color-primary-light, v.$color-primary-dark 70%);
+
+    @include m.respond(lg) {
+      display: block;
+    }
+  }
+
+  &__panel {
+    @include m.flex(row, center, center);
+    padding: v.$space-7 v.$space-5;
+  }
+}
+
+.error-page {
+  text-align: center;
+  padding: v.$space-9 0;
+
+  &__code {
+    font-family: v.$font-heading;
+    font-size: 6rem;
+    font-weight: 700;
+    color: v.$color-accent;
+    line-height: 1;
+    margin-bottom: v.$space-3;
+  }
+
+  p {
+    color: v.$color-text-muted;
+    margin: v.$space-3 0 v.$space-6;
+  }
+}
+
+.about-content p {
+  margin-bottom: v.$space-4;
+  color: v.$color-text-muted;
+}

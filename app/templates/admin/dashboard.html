@@ -1,0 +1,87 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Dashboard — Admin{% endblock %}
+{% block admin_title %}Dashboard{% endblock %}
+
+{% block admin_content %}
+<div class="stat-card-grid">
+  <div class="stat-card">
+    <p class="stat-card__label">Total Revenue</p>
+    <p class="stat-card__value">${{ '{:,.0f}'.format(stats.total_revenue) }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-card__label">Revenue This Month</p>
+    <p class="stat-card__value">${{ '{:,.0f}'.format(stats.month_revenue) }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-card__label">Total Bookings</p>
+    <p class="stat-card__value">{{ stats.total_bookings }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-card__label">Upcoming Bookings</p>
+    <p class="stat-card__value">{{ stats.upcoming_bookings }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-card__label">Registered Guests</p>
+    <p class="stat-card__value">{{ stats.total_users }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-card__label">Active Rooms</p>
+    <p class="stat-card__value">{{ stats.active_rooms }} / {{ stats.total_rooms }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-card__label">Reviews Pending Approval</p>
+    <p class="stat-card__value">{{ stats.pending_reviews }}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-card__label">Unread Messages</p>
+    <p class="stat-card__value">{{ stats.unread_messages }}</p>
+  </div>
+</div>
+
+<div class="admin-panel-grid">
+  <div class="card-panel admin-chart-panel">
+    <h3>Revenue — Last 6 Months</h3>
+    <canvas id="revenueChart" height="220"
+      data-labels='{{ monthly_labels|tojson }}'
+      data-values='{{ monthly_revenue|tojson }}'></canvas>
+  </div>
+
+  <div class="card-panel">
+    <h3>Top Rated Rooms</h3>
+    <ul class="admin-list">
+      {% for room in top_rooms %}
+        <li>
+          <span>{{ room.name }}</span>
+          <span class="muted-text">{{ room.average_rating }} &#9733; ({{ room.review_count }})</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<div class="card-panel">
+  <h3>Recent Bookings</h3>
+  <table class="admin-table">
+    <thead>
+      <tr><th>Reference</th><th>Guest</th><th>Room</th><th>Check-in</th><th>Status</th><th>Total</th></tr>
+    </thead>
+    <tbody>
+      {% for booking in recent_bookings %}
+        <tr>
+          <td>{{ booking.reference }}</td>
+          <td>{{ booking.user.full_name }}</td>
+          <td>{{ booking.room.name }}</td>
+          <td>{{ booking.check_in.strftime('%b %d, %Y') }}</td>
+          <td><span class="badge badge--{{ {'confirmed':'success','pending':'warning','cancelled':'danger','completed':'neutral'}[booking.status] }}">{{ booking.status|capitalize }}</span></td>
+          <td>${{ '%.2f'|format(booking.total_price) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
+{% endblock %}

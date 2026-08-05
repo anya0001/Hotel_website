@@ -1,0 +1,129 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.site-footer {
+  background: v.$color-primary-dark;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: v.$space-9;
+
+  &__grid {
+    @include m.grid(1, v.$space-6);
+    padding: v.$space-8 0 v.$space-6;
+
+    @include m.respond(md) {
+      grid-template-columns: 2fr 1fr 1fr 1.4fr;
+    }
+  }
+
+  &__brand {
+    p {
+      color: rgba(255, 255, 255, 0.7);
+      margin: v.$space-4 0;
+      max-width: 320px;
+    }
+
+    .site-header__logo {
+      color: v.$color-text-inverse;
+    }
+  }
+
+  &__social {
+    @include m.flex(row, flex-start, center, v.$space-3);
+
+    a {
+      @include m.flex(row, center, center);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      font-size: v.$fs-xs;
+      font-weight: 700;
+      transition: background v.$transition-fast;
+
+      &:hover {
+        background: v.$color-accent;
+        color: v.$color-primary-dark;
+      }
+    }
+  }
+
+  &__col {
+    h4 {
+      color: v.$color-text-inverse;
+      font-family: v.$font-body;
+      font-size: v.$fs-sm;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: v.$space-4;
+    }
+
+    ul li {
+      margin-bottom: v.$space-2;
+    }
+
+    a {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: v.$fs-sm;
+
+      &:hover {
+        color: v.$color-accent-light;
+      }
+    }
+  }
+
+  &__contact li {
+    margin-bottom: v.$space-2;
+  }
+
+  &__newsletter p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: v.$fs-sm;
+    margin-bottom: v.$space-3;
+  }
+
+  &__bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+    &-inner {
+      @include m.flex(row, space-between, center);
+      flex-wrap: wrap;
+      gap: v.$space-2;
+      padding: v.$space-4 0;
+      font-size: v.$fs-xs;
+      color: rgba(255, 255, 255, 0.55);
+    }
+  }
+}
+
+.newsletter-form {
+  @include m.flex(row, flex-start, stretch, v.$space-2);
+
+  input {
+    flex: 1;
+    padding: 11px v.$space-4;
+    border-radius: v.$radius-pill;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    color: v.$color-text-inverse;
+    min-width: 0;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  &--large {
+    max-width: 480px;
+    margin: v.$space-5 auto 0;
+
+    input {
+      background: v.$color-surface;
+      color: v.$color-text;
+      border: 1px solid v.$color-border;
+
+      &::placeholder {
+        color: v.$color-text-muted;
+      }
+    }
+  }
+}

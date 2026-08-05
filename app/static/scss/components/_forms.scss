@@ -1,0 +1,166 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.form-field {
+  margin-bottom: v.$space-4;
+
+  &__label {
+    display: block;
+    font-size: v.$fs-sm;
+    font-weight: 600;
+    margin-bottom: v.$space-2;
+    color: v.$color-text;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 12px v.$space-4;
+    border: 1px solid v.$color-border;
+    border-radius: v.$radius-sm;
+    background: v.$color-surface;
+    transition: border-color v.$transition-fast, box-shadow v.$transition-fast;
+
+    &:focus {
+      outline: none;
+      border-color: v.$color-primary;
+      box-shadow: 0 0 0 3px rgba(10, 77, 104, 0.12);
+    }
+  }
+
+  &__textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  &__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%236B7580' d='M0 0l6 8 6-8z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right v.$space-4 center;
+    padding-right: v.$space-7;
+  }
+
+  &__file {
+    padding: v.$space-3;
+    border: 1px dashed v.$color-border-strong;
+    border-radius: v.$radius-sm;
+  }
+
+  &__help {
+    font-size: v.$fs-xs;
+    color: v.$color-text-muted;
+    margin-top: v.$space-1;
+  }
+
+  &__error {
+    font-size: v.$fs-xs;
+    color: v.$color-danger;
+    margin-top: v.$space-1;
+  }
+
+  &--error &__input {
+    border-color: v.$color-danger;
+  }
+}
+
+.checkbox-field {
+  @include m.flex(row, flex-start, center, v.$space-2);
+  font-size: v.$fs-sm;
+  cursor: pointer;
+
+  input {
+    width: 18px;
+    height: 18px;
+    accent-color: v.$color-primary;
+  }
+}
+
+.checkbox-group {
+  margin-bottom: v.$space-4;
+
+  &__options {
+    @include m.grid(2, v.$space-2);
+    margin-top: v.$space-2;
+  }
+}
+
+.auth-card {
+  @include m.card($shadow: v.$shadow-md);
+  padding: v.$space-7;
+  width: 100%;
+  max-width: 420px;
+
+  h1 {
+    margin-bottom: v.$space-2;
+  }
+
+  &__lead {
+    color: v.$color-text-muted;
+    margin-bottom: v.$space-6;
+  }
+
+  &__row {
+    @include m.flex(row, space-between, center);
+    margin-bottom: v.$space-4;
+    font-size: v.$fs-sm;
+
+    a {
+      color: v.$color-primary;
+      font-weight: 600;
+    }
+  }
+
+  &__footer {
+    text-align: center;
+    margin-top: v.$space-5;
+    font-size: v.$fs-sm;
+    color: v.$color-text-muted;
+
+    a {
+      color: v.$color-primary;
+      font-weight: 700;
+    }
+  }
+}
+
+.search-widget {
+  @include m.glass(0.92, 20px);
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-lg;
+  padding: v.$space-5;
+  @include m.flex(column, flex-start, stretch, v.$space-3);
+  margin-top: -60px;
+  position: relative;
+  z-index: 10;
+
+  @include m.respond(md) {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+
+  &__field {
+    flex: 1;
+
+    label {
+      display: block;
+      font-size: v.$fs-xs;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: v.$color-text-muted;
+      margin-bottom: v.$space-1;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: v.$radius-sm;
+      border: 1px solid v.$color-border;
+      background: v.$color-surface;
+    }
+  }
+
+  &__submit {
+    white-space: nowrap;
+  }
+}

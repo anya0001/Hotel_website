@@ -1,0 +1,190 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.room-grid {
+  @include m.grid(1, v.$space-5);
+
+  @include m.respond(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include m.respond(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &--compact {
+    @include m.respond(lg) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+.amenity-grid {
+  @include m.grid(2, v.$space-4);
+
+  @include m.respond(md) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  &--compact {
+    grid-template-columns: repeat(2, 1fr);
+
+    @include m.respond(sm) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+.amenity-tile {
+  @include m.flex(row, flex-start, center, v.$space-3);
+  @include m.card();
+  padding: v.$space-4;
+
+  &__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: v.$color-neutral-bg;
+    flex-shrink: 0;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__label {
+    font-size: v.$fs-sm;
+    font-weight: 600;
+  }
+}
+
+.gallery-grid {
+  @include m.grid(2, v.$space-3);
+
+  @include m.respond(md) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include m.respond(lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  &--preview {
+    grid-template-columns: repeat(4, 1fr);
+
+    @include m.respond(md) {
+      grid-template-columns: repeat(8, 1fr);
+    }
+  }
+
+  &__item {
+    display: block;
+    border-radius: v.$radius-md;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform v.$transition-slow;
+    }
+
+    &:hover img {
+      transform: scale(1.08);
+    }
+  }
+
+  figure.gallery-grid__item {
+    aspect-ratio: 4 / 3;
+    position: relative;
+
+    figcaption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: v.$space-3;
+      background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.6));
+      color: v.$color-text-inverse;
+      font-size: v.$fs-sm;
+      opacity: 0;
+      transition: opacity v.$transition-base;
+    }
+
+    &:hover figcaption {
+      opacity: 1;
+    }
+  }
+}
+
+.stats-strip {
+  padding: v.$space-6 0;
+
+  &__grid {
+    @include m.grid(2, v.$space-5);
+    text-align: center;
+
+    @include m.respond(md) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+.stat {
+  &__value {
+    display: block;
+    font-family: v.$font-heading;
+    font-size: v.$fs-2xl;
+    font-weight: 700;
+    color: v.$color-primary;
+  }
+
+  &__label {
+    font-size: v.$fs-sm;
+    color: v.$color-text-muted;
+  }
+}
+
+.attraction-grid {
+  @include m.grid(1, v.$space-5);
+
+  @include m.respond(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include m.respond(lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.attraction-card {
+  @include m.card();
+  padding: v.$space-5;
+
+  h3 { margin-bottom: v.$space-2; font-size: v.$fs-md; }
+  p { color: v.$color-text-muted; font-size: v.$fs-sm; }
+}
+
+.testimonial-grid {
+  @include m.grid(1, v.$space-5);
+
+  @include m.respond(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include m.respond(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.promo-strip__grid {
+  @include m.grid(1, v.$space-4);
+
+  @include m.respond(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

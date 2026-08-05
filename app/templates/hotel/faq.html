@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}FAQ — {{ HOTEL_NAME }}{% endblock %}
+{% block body_class %}page-faq{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="page-header__eyebrow">Good to Know</p>
+    <h1>Frequently Asked Questions</h1>
+    <p class="page-header__lead">Can't find what you're looking for? <a href="{{ url_for('hotel.contact') }}">Contact our concierge team</a>.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container--narrow">
+    {% for category in categories %}
+      <h2 class="faq-category-title">{{ category }}</h2>
+      <div class="accordion" data-accordion>
+        {% for item in faqs if item.category == category %}
+          <div class="accordion__item">
+            <button class="accordion__trigger" type="button">
+              <span>{{ item.question }}</span>
+              <span class="accordion__icon">+</span>
+            </button>
+            <div class="accordion__panel">
+              <p>{{ item.answer }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

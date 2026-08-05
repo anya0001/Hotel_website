@@ -1,0 +1,211 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+// Rooms search page -----------------------------------------------
+.rooms-layout__grid {
+  @include m.grid(1, v.$space-6);
+
+  @include m.respond(lg) {
+    grid-template-columns: 280px 1fr;
+    align-items: start;
+  }
+}
+
+.filters-panel {
+  @include m.card();
+  padding: v.$space-5;
+  position: sticky;
+  top: calc(#{v.$header-height} + #{v.$space-4});
+
+  &__group {
+    margin-bottom: v.$space-4;
+
+    label {
+      display: block;
+      font-size: v.$fs-xs;
+      font-weight: 600;
+      margin-bottom: v.$space-1;
+      color: v.$color-text-muted;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px v.$space-3;
+      border-radius: v.$radius-sm;
+      border: 1px solid v.$color-border;
+      background: v.$color-surface;
+    }
+
+    &--split {
+      @include m.flex(row, flex-start, flex-start, v.$space-3);
+
+      > div { flex: 1; }
+    }
+  }
+
+  &__submit {
+    width: 100%;
+    margin-top: v.$space-2;
+  }
+
+  &__reset {
+    display: block;
+    text-align: center;
+    margin-top: v.$space-3;
+    font-size: v.$fs-sm;
+    color: v.$color-text-muted;
+    text-decoration: underline;
+  }
+}
+
+// Account pages -----------------------------------------------
+.account-layout {
+  @include m.grid(1, v.$space-6);
+
+  @include m.respond(md) {
+    grid-template-columns: 220px 1fr;
+    align-items: start;
+  }
+}
+
+.account-nav {
+  @include m.card();
+  padding: v.$space-3;
+  @include m.flex(row, flex-start, stretch, v.$space-1);
+  overflow-x: auto;
+
+  @include m.respond(md) {
+    flex-direction: column;
+    position: sticky;
+    top: calc(#{v.$header-height} + #{v.$space-4});
+  }
+
+  a {
+    padding: v.$space-3 v.$space-4;
+    border-radius: v.$radius-sm;
+    font-size: v.$fs-sm;
+    font-weight: 600;
+    white-space: nowrap;
+
+    &:hover {
+      background: v.$color-neutral-bg;
+    }
+
+    &.is-active {
+      background: v.$color-primary;
+      color: v.$color-text-inverse;
+    }
+  }
+}
+
+// Room detail -----------------------------------------------
+.room-detail-layout__grid {
+  @include m.grid(1, v.$space-6);
+
+  @include m.respond(lg) {
+    grid-template-columns: 1fr 340px;
+    align-items: start;
+  }
+}
+
+.booking-panel {
+  @include m.card($shadow: v.$shadow-md);
+  padding: v.$space-5;
+  position: sticky;
+  top: calc(#{v.$header-height} + #{v.$space-4});
+
+  &__price {
+    @include m.flex(row, flex-start, baseline, v.$space-2);
+    margin-bottom: v.$space-4;
+
+    &-old {
+      text-decoration: line-through;
+      color: v.$color-text-muted;
+      font-size: v.$fs-sm;
+    }
+
+    &-current {
+      font-family: v.$font-heading;
+      font-size: v.$fs-2xl;
+      font-weight: 700;
+      color: v.$color-primary;
+    }
+
+    &-unit {
+      color: v.$color-text-muted;
+      font-size: v.$fs-sm;
+    }
+  }
+
+  &__form .form-field {
+    margin-bottom: v.$space-3;
+  }
+
+  &__estimate {
+    font-size: v.$fs-sm;
+    color: v.$color-text-muted;
+    min-height: 20px;
+  }
+
+  &__submit {
+    width: 100%;
+    margin-top: v.$space-2;
+  }
+
+  &__note {
+    text-align: center;
+    font-size: v.$fs-xs;
+    color: v.$color-text-muted;
+    margin-top: v.$space-3;
+  }
+}
+
+// Booking form page -----------------------------------------------
+.booking-form-layout {
+  @include m.grid(1, v.$space-6);
+
+  @include m.respond(lg) {
+    grid-template-columns: 1fr 320px;
+  }
+}
+
+.booking-form__row {
+  @include m.flex(row, flex-start, flex-start, v.$space-3);
+
+  > .form-field { flex: 1; }
+}
+
+.booking-summary {
+  &__image {
+    border-radius: v.$radius-sm;
+    margin-bottom: v.$space-3;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  &__room {
+    font-weight: 700;
+  }
+
+  &__price {
+    margin-top: v.$space-4;
+    font-family: v.$font-heading;
+    font-size: v.$fs-xl;
+    color: v.$color-primary;
+  }
+}
+
+// Contact page -----------------------------------------------
+.contact-layout {
+  @include m.grid(1, v.$space-6);
+
+  @include m.respond(lg) {
+    grid-template-columns: 1fr 1.2fr;
+  }
+}
+
+.contact-info__item {
+  margin-bottom: v.$space-4;
+
+  h3 { font-size: v.$fs-sm; text-transform: uppercase; letter-spacing: 0.06em; color: v.$color-text-muted; margin-bottom: v.$space-1; }
+}

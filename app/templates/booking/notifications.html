@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Notifications — {{ HOTEL_NAME }}{% endblock %}
+{% block body_class %}page-account{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="page-header__eyebrow">Account</p>
+    <h1>Notifications</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container account-layout">
+    {% include "auth/_account_nav.html" %}
+
+    <div class="account-content">
+      {% if notifications %}
+        <div class="notification-list">
+          {% for n in notifications %}
+            <a href="{{ n.url or '#' }}" class="notification-row card-panel {{ 'is-unread' if not n.is_read }}">
+              <div>
+                <h4>{{ n.title }}</h4>
+                {% if n.body %}<p class="muted-text">{{ n.body }}</p>{% endif %}
+              </div>
+              <span class="notification-row__date">{{ n.created_at.strftime('%b %d') }}</span>
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <h3>You're all caught up</h3>
+          <p>Booking updates and offers will appear here.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% from "macros/ui.html" import stars, room_card %}
+{% block body_class %}page-home{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="hero__media" aria-hidden="true"></div>
+  <div class="hero__overlay"></div>
+  <div class="container hero__inner">
+    <p class="hero__eyebrow">{{ get_setting('hero_subtitle', 'Luxury rooms, oceanfront views, and service beyond compare.') }}</p>
+    <h1 class="hero__title">{{ get_setting('hero_title', 'An Unforgettable Stay Awaits') }}</h1>
+    <p class="hero__lead">Discover rooms, suites and villas designed for rest, romance and celebration — moments from the shoreline.</p>
+  </div>
+
+  <div class="container">
+    <form class="search-widget" action="{{ url_for('hotel.rooms') }}" method="get">
+      <div class="search-widget__field">
+        <label for="check_in">Check-in</label>
+        <input type="date" id="check_in" name="check_in" min="{{ today.isoformat() }}">
+      </div>
+      <div class="search-widget__field">
+        <label for="check_out">Check-out</label>
+        <input type="date" id="check_out" name="check_out" min="{{ today.isoformat() }}">
+      </div>
+      <div class="search-widget__field">
+        <label for="guests">Guests</label>
+        <input type="number" id="guests" name="guests" min="1" max="20" value="2">
+      </div>
+      <button type="submit" class="btn btn--accent search-widget__submit">Check Availability</button>
+    </form>
+  </div>
+</section>
+
+<section class="stats-strip">
+  <div class="container stats-strip__grid">
+    <div class="stat"><span class="stat__value">{{ get_setting('stat_1_value', '200+') }}</span><span class="stat__label">{{ get_setting('stat_1_label', 'Rooms & Suites') }}</span></div>
+    <div class="stat"><span class="stat__value">{{ get_setting('stat_2_value', '15k+') }}</span><span class="stat__label">{{ get_setting('stat_2_label', 'Happy Guests') }}</span></div>
+    <div class="stat"><span class="stat__value">{{ get_setting('stat_3_value', '4.9') }}</span><span class="stat__label">{{ get_setting('stat_3_label', 'Average Rating') }}</span></div>
+    <div class="stat"><span class="stat__value">{{ get_setting('stat_4_value', '12') }}</span><span class="stat__label">{{ get_setting('stat_4_label', 'Years of Excellence') }}</span></div>
+  </div>
+</section>
+
+{% if promotions %}
+<section class="section promo-strip">
+  <div class="container promo-strip__grid">
+    {% for promo in promotions %}
+      <div class="promo-card">
+        <h3>{{ promo.title }}</h3>
+        <p>{{ promo.description }}</p>
+        {% if promo.code %}<span class="promo-card__code">Code: {{ promo.code }}</span>{% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-heading__eyebrow">Handpicked for You</p>
+      <h2 class="section-heading__title">Featured Rooms &amp; Suites</h2>
+    </div>
+    <div class="room-grid">
+      {% for room in featured_rooms %}{{ room_card(room) }}{% endfor %}
+    </div>
+    <div class="section-cta">
+      <a href="{{ url_for('hotel.rooms') }}" class="btn btn--primary">View All Rooms</a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--muted">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-heading__eyebrow">Guest Favorites</p>
+      <h2 class="section-heading__title">Most Popular Rooms</h2>
+    </div>
+    <div class="room-grid room-grid--compact">
+      {% for room in popular_rooms %}{{ room_card(room) }}{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-heading__eyebrow">Everything You Need</p>
+      <h2 class="section-heading__title">Hotel Amenities</h2>
+    </div>
+    <div class="amenity-grid">
+      {% for amenity in amenities %}
+        <div class="amenity-tile">
+          <span class="amenity-tile__icon" data-icon="{{ amenity.icon }}"></span>
+          <span class="amenity-tile__label">{{ amenity.name }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--muted">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-heading__eyebrow">A Glimpse Inside</p>
+      <h2 class="section-heading__title">Photo Gallery</h2>
+    </div>
+    <div class="gallery-grid gallery-grid--preview">
+      {% for image in gallery %}
+        <a class="gallery-grid__item" href="{{ url_for('hotel.gallery') }}">
+          <img src="{{ url_for('static', filename='images/uploads/' + (image.thumbnail_filename or image.filename)) }}" alt="{{ image.caption or '' }}" loading="lazy">
+        </a>
+      {% endfor %}
+    </div>
+    <div class="section-cta">
+      <a href="{{ url_for('hotel.gallery') }}" class="btn btn--outline">View Full Gallery</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-heading__eyebrow">What Guests Say</p>
+      <h2 class="section-heading__title">Testimonials</h2>
+    </div>
+    <div class="testimonial-grid">
+      {% for review in testimonials %}
+        <blockquote class="testimonial-card">
+          {{ stars(review.rating) }}
+          <p>&ldquo;{{ review.body }}&rdquo;</p>
+          <footer>
+            <span class="testimonial-card__name">{{ review.user.full_name }}</span>
+            <span class="testimonial-card__room">stayed in {{ review.room.name }}</span>
+          </footer>
+        </blockquote>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--muted">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-heading__eyebrow">Beyond the Resort</p>
+      <h2 class="section-heading__title">Nearby Attractions</h2>
+    </div>
+    <div class="attraction-grid">
+      <div class="attraction-card">
+        <h3>Coral Bay Boardwalk</h3>
+        <p>A 10-minute stroll along the shoreline, lined with cafes, boutiques and live music at sunset.</p>
+      </div>
+      <div class="attraction-card">
+        <h3>Marina District</h3>
+        <p>Yacht tours, waterfront dining and duty-free shopping — just 5 minutes by hotel shuttle.</p>
+      </div>
+      <div class="attraction-card">
+        <h3>Old Town Market</h3>
+        <p>Explore local artisans, spice merchants and street food in the historic quarter, 15 minutes away.</p>
+      </div>
+      <div class="attraction-card">
+        <h3>Reef Diving Center</h3>
+        <p>PADI-certified diving and snorkeling excursions departing directly from our private beach.</p>
+      </div>
+    </div>
+    <div class="map-embed">
+      <iframe
+        title="Hotel location map"
+        loading="lazy"
+        src="https://www.google.com/maps?q={{ HOTEL_LAT }},{{ HOTEL_LNG }}&z=14&output=embed"
+        width="100%" height="360" style="border:0;" allowfullscreen referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-heading__eyebrow">Good to Know</p>
+      <h2 class="section-heading__title">Frequently Asked Questions</h2>
+    </div>
+    <div class="accordion" data-accordion>
+      {% for item in faqs %}
+        <div class="accordion__item">
+          <button class="accordion__trigger" type="button">
+            <span>{{ item.question }}</span>
+            <span class="accordion__icon">+</span>
+          </button>
+          <div class="accordion__panel">
+            <p>{{ item.answer }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="section-cta">
+      <a href="{{ url_for('hotel.faq') }}" class="btn btn--outline">View All FAQs</a>
+    </div>
+  </div>
+</section>
+
+<section class="section newsletter-section">
+  <div class="container newsletter-section__inner">
+    <h2>Never Miss an Offer</h2>
+    <p>Subscribe for early access to seasonal rates, member-only perks and new suite openings.</p>
+    <form action="{{ url_for('hotel.newsletter') }}" method="post" class="newsletter-form newsletter-form--large">
+      {{ newsletter_form.hidden_tag() }}
+      {{ newsletter_form.email(placeholder="you@example.com") }}
+      <button type="submit" class="btn btn--accent">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+{% endblock %}

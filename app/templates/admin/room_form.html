@@ -1,0 +1,67 @@
+{% extends "admin/_layout.html" %}
+{% from "macros/ui.html" import field, checkbox_group %}
+{% block title %}{{ 'Edit' if room else 'Add' }} Room — Admin{% endblock %}
+{% block admin_title %}{{ 'Edit Room' if room else 'Add Room' }}{% endblock %}
+
+{% block admin_content %}
+<form method="post" enctype="multipart/form-data" novalidate class="admin-form">
+  {{ form.hidden_tag() }}
+
+  <div class="admin-form__grid">
+    <div class="card-panel">
+      <h3>Basic Details</h3>
+      {{ field(form.name) }}
+      <div class="admin-form__row">
+        {{ field(form.room_type) }}
+        {{ field(form.price_per_night) }}
+      </div>
+      {{ field(form.short_description) }}
+      {{ field(form.description) }}
+      <div class="admin-form__row">
+        {{ field(form.discount_percent) }}
+        {{ field(form.total_units, help_text="Number of physical rooms of this type") }}
+      </div>
+    </div>
+
+    <div class="card-panel">
+      <h3>Capacity</h3>
+      <div class="admin-form__row">
+        {{ field(form.max_guests) }}
+        {{ field(form.beds) }}
+      </div>
+      <div class="admin-form__row">
+        {{ field(form.bedrooms) }}
+        {{ field(form.size_sqm) }}
+      </div>
+      {{ field(form.is_featured) }}
+      {{ field(form.is_active) }}
+    </div>
+
+    <div class="card-panel">
+      <h3>Amenities</h3>
+      {{ checkbox_group(form.amenities) }}
+    </div>
+
+    <div class="card-panel">
+      <h3>Images</h3>
+      {{ field(form.images, help_text="You can select multiple files.") }}
+      {% if room and room.images %}
+        <div class="admin-image-grid">
+          {% for image in room.images %}
+            <div class="admin-image-grid__item">
+              <img src="{{ url_for('static', filename='images/uploads/' + image.thumbnail_filename) }}" alt="">
+              <form method="post" action="{{ url_for('admin.room_image_delete', image_id=image.id) }}" onsubmit="return confirm('Remove this image?')">
+                {{ form.hidden_tag() }}
+                <button type="submit" class="admin-image-grid__remove" aria-label="Remove image">&times;</button>
+              </form>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn--primary">{{ 'Save Changes' if room else 'Create Room' }}</button>
+  <a href="{{ url_for('admin.rooms_list') }}" class="btn btn--ghost">Cancel</a>
+</form>
+{% endblock %}

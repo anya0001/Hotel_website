@@ -1,0 +1,39 @@
+{% extends "admin/_layout.html" %}
+{% from "macros/ui.html" import flask_pagination, stars %}
+{% block title %}Manage Reviews — Admin{% endblock %}
+{% block admin_title %}Reviews{% endblock %}
+
+{% block admin_content %}
+<div class="card-panel">
+  <table class="admin-table">
+    <thead>
+      <tr><th>Guest</th><th>Room</th><th>Rating</th><th>Review</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for review in pagination.items %}
+        <tr>
+          <td>{{ review.user.full_name }}</td>
+          <td>{{ review.room.name }}</td>
+          <td>{{ stars(review.rating) }}</td>
+          <td class="admin-table__review">{{ review.title }} — {{ review.body[:80] }}{{ '…' if review.body|length > 80 }}</td>
+          <td><span class="badge badge--{{ 'success' if review.is_approved else 'warning' }}">{{ 'Approved' if review.is_approved else 'Hidden' }}</span></td>
+          <td class="admin-table__actions">
+            <form method="post" action="{{ url_for('admin.review_toggle_approval', review_id=review.id) }}">
+              {{ delete_form.hidden_tag() }}
+              <button type="submit" class="btn btn--outline btn--sm">{{ 'Hide' if review.is_approved else 'Approve' }}</button>
+            </form>
+            <form method="post" action="{{ url_for('admin.review_delete', review_id=review.id) }}" onsubmit="return confirm('Delete this review?')">
+              {{ delete_form.hidden_tag() }}
+              <button type="submit" class="btn btn--ghost btn--sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="muted-text">No reviews yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{{ flask_pagination(pagination, 'admin.reviews_list') }}
+{% endblock %}

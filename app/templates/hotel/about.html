@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}About Us — {{ HOTEL_NAME }}{% endblock %}
+{% block body_class %}page-about{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="page-header__eyebrow">Our Story</p>
+    <h1>About {{ HOTEL_NAME }}</h1>
+    <p class="page-header__lead">A decade of quiet luxury on the coast.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container--narrow about-content">
+    <p>
+      Since opening our doors over a decade ago, {{ HOTEL_NAME }} has been dedicated to a
+      single idea: that true luxury is found in thoughtful, personal details rather than
+      excess. Every room, every dish, and every interaction is designed around that
+      philosophy.
+    </p>
+    <p>
+      Set along the shoreline of Coral Bay, our property blends modern architecture with the
+      natural rhythm of the coast — floor-to-ceiling windows, locally sourced materials, and
+      gardens that frame the ocean rather than compete with it.
+    </p>
+    <p>
+      Our team, many of whom have been with us since opening, take pride in remembering the
+      small things: a returning guest's favorite pillow, a family's dietary needs, the exact
+      table by the window. It's this attention that has earned us the loyalty of guests who
+      return year after year.
+    </p>
+  </div>
+</section>
+
+<section class="section section--muted">
+  <div class="container stats-strip__grid">
+    <div class="stat"><span class="stat__value">{{ get_setting('stat_1_value', '200+') }}</span><span class="stat__label">Rooms &amp; Suites</span></div>
+    <div class="stat"><span class="stat__value">{{ get_setting('stat_2_value', '15k+') }}</span><span class="stat__label">Happy Guests</span></div>
+    <div class="stat"><span class="stat__value">{{ get_setting('stat_3_value', '4.9') }}</span><span class="stat__label">Average Rating</span></div>
+    <div class="stat"><span class="stat__value">{{ get_setting('stat_4_value', '12') }}</span><span class="stat__label">Years of Excellence</span></div>
+  </div>
+</section>
+{% endblock %}

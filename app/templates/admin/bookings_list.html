@@ -1,0 +1,50 @@
+{% extends "admin/_layout.html" %}
+{% from "macros/ui.html" import flask_pagination %}
+{% block title %}Manage Bookings — Admin{% endblock %}
+{% block admin_title %}Bookings{% endblock %}
+
+{% block admin_content %}
+<div class="admin-content__toolbar">
+  <div class="admin-filter-pills">
+    <a href="{{ url_for('admin.bookings_list') }}" class="{{ 'is-active' if not status_filter }}">All</a>
+    <a href="{{ url_for('admin.bookings_list', status='pending') }}" class="{{ 'is-active' if status_filter == 'pending' }}">Pending</a>
+    <a href="{{ url_for('admin.bookings_list', status='confirmed') }}" class="{{ 'is-active' if status_filter == 'confirmed' }}">Confirmed</a>
+    <a href="{{ url_for('admin.bookings_list', status='completed') }}" class="{{ 'is-active' if status_filter == 'completed' }}">Completed</a>
+    <a href="{{ url_for('admin.bookings_list', status='cancelled') }}" class="{{ 'is-active' if status_filter == 'cancelled' }}">Cancelled</a>
+  </div>
+</div>
+
+<div class="card-panel">
+  <table class="admin-table">
+    <thead>
+      <tr><th>Reference</th><th>Guest</th><th>Room</th><th>Dates</th><th>Total</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for booking in pagination.items %}
+        <tr>
+          <td>{{ booking.reference }}</td>
+          <td>{{ booking.user.full_name }}</td>
+          <td>{{ booking.room.name }}</td>
+          <td>{{ booking.check_in.strftime('%b %d') }} – {{ booking.check_out.strftime('%b %d, %Y') }}</td>
+          <td>${{ '%.2f'|format(booking.total_price) }}</td>
+          <td>
+            <form method="post" action="{{ url_for('admin.booking_update_status', booking_id=booking.id) }}" class="inline-status-form">
+              {{ status_form.hidden_tag() }}
+              <select name="status" onchange="this.form.submit()">
+                {% for value, label in [('pending','Pending'),('confirmed','Confirmed'),('completed','Completed'),('cancelled','Cancelled')] %}
+                  <option value="{{ value }}" {{ 'selected' if booking.status == value }}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </form>
+          </td>
+          <td><a href="{{ url_for('booking.confirmation', reference=booking.reference) }}" class="btn btn--outline btn--sm">View</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7" class="muted-text">No bookings found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{{ flask_pagination(pagination, 'admin.bookings_list', status=status_filter) }}
+{% endblock %}

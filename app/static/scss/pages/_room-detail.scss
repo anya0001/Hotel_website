@@ -1,0 +1,97 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.room-gallery {
+  &__main {
+    aspect-ratio: 16 / 9;
+    max-height: 560px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, v.$color-neutral-bg, v.$color-border);
+  }
+
+  &__thumbs {
+    @include m.flex(row, flex-start, center, v.$space-2);
+    padding: v.$space-3 v.$space-5;
+    overflow-x: auto;
+    background: v.$color-surface;
+  }
+
+  &__thumb {
+    flex-shrink: 0;
+    width: 88px;
+    height: 64px;
+    border-radius: v.$radius-sm;
+    overflow: hidden;
+    opacity: 0.6;
+    transition: opacity v.$transition-fast, outline v.$transition-fast;
+
+    img { width: 100%; height: 100%; object-fit: cover; }
+
+    &:hover, &.is-active {
+      opacity: 1;
+      outline: 2px solid v.$color-accent;
+    }
+  }
+}
+
+.room-detail-header {
+  @include m.flex(row, space-between, flex-start);
+  margin-bottom: v.$space-4;
+
+  &__type {
+    font-size: v.$fs-xs;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: v.$color-accent-dark;
+    margin-bottom: v.$space-1;
+  }
+}
+
+.room-detail-facts {
+  @include m.flex(row, flex-start, center, v.$space-5);
+  flex-wrap: wrap;
+  padding: v.$space-4 0;
+  margin-bottom: v.$space-5;
+  border-top: 1px solid v.$color-border;
+  border-bottom: 1px solid v.$color-border;
+  font-size: v.$fs-sm;
+
+  strong { color: v.$color-primary; }
+}
+
+.room-detail-section {
+  margin-bottom: v.$space-7;
+
+  h2 { margin-bottom: v.$space-3; }
+}
+
+.policy-list li {
+  position: relative;
+  padding-left: v.$space-5;
+  margin-bottom: v.$space-2;
+  color: v.$color-text-muted;
+  font-size: v.$fs-sm;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: v.$color-accent;
+  }
+}

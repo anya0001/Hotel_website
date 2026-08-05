@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "macros/ui.html" import field %}
+{% block title %}Book {{ room.name }} — {{ HOTEL_NAME }}{% endblock %}
+{% block body_class %}page-booking{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="page-header__eyebrow">Complete Your Reservation</p>
+    <h1>{{ room.name }}</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container booking-form-layout">
+    <form method="post" class="card-panel booking-form" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="booking-form__row">
+        {{ field(form.check_in) }}
+        {{ field(form.check_out) }}
+      </div>
+      {{ field(form.guests, help_text="Maximum " + room.max_guests|string + " guests for this room.") }}
+      {{ field(form.special_requests, placeholder="Anything we should know? (optional)") }}
+      <button type="submit" class="btn btn--accent" style="width:100%">Confirm Booking</button>
+      <p class="muted-text" style="margin-top:12px;">By confirming, you agree to our cancellation policy: free cancellation up to 48 hours before check-in.</p>
+    </form>
+
+    <aside class="booking-summary card-panel">
+      <h3>Booking Summary</h3>
+      {% if room.primary_image %}
+        <img src="{{ url_for('static', filename='images/uploads/' + room.primary_image.filename) }}" alt="{{ room.name }}" class="booking-summary__image">
+      {% endif %}
+      <p class="booking-summary__room">{{ room.name }}</p>
+      <p class="muted-text">{{ room.room_type }} &middot; sleeps {{ room.max_guests }}</p>
+      <div class="booking-summary__price">
+        <span>${{ '%.2f'|format(room.effective_price) }}</span>
+        <span class="muted-text">/ night</span>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

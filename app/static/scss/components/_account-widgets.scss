@@ -1,0 +1,152 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.booking-list, .notification-list {
+  @include m.flex(column, flex-start, stretch, v.$space-4);
+}
+
+.booking-row {
+  @include m.flex(row, flex-start, center, v.$space-4);
+  flex-wrap: wrap;
+
+  &__image {
+    width: 96px;
+    height: 72px;
+    border-radius: v.$radius-sm;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  &__header {
+    @include m.flex(row, flex-start, center, v.$space-3);
+    margin-bottom: v.$space-1;
+  }
+
+  &__price {
+    font-weight: 700;
+    color: v.$color-primary;
+    margin-top: v.$space-1;
+  }
+
+  &__actions {
+    @include m.flex(row, flex-end, center, v.$space-2);
+  }
+}
+
+.notification-row {
+  @include m.flex(row, space-between, center, v.$space-4);
+
+  h4 { margin-bottom: v.$space-1; font-size: v.$fs-sm; }
+
+  &__date {
+    font-size: v.$fs-xs;
+    color: v.$color-text-muted;
+    white-space: nowrap;
+  }
+
+  &.is-unread {
+    border-left: 3px solid v.$color-accent;
+  }
+}
+
+.confirmation-card {
+  text-align: center;
+  padding: v.$space-8 v.$space-6;
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto v.$space-4;
+    border-radius: 50%;
+    background: v.$color-success-bg;
+    color: v.$color-success;
+    font-size: 1.75rem;
+    @include m.flex(row, center, center);
+  }
+
+  &__actions {
+    @include m.flex(row, center, center, v.$space-3);
+    margin-top: v.$space-6;
+    flex-wrap: wrap;
+  }
+}
+
+.confirmation-details {
+  text-align: left;
+  max-width: 380px;
+  margin: v.$space-6 auto 0;
+
+  div {
+    @include m.flex(row, space-between, center);
+    padding: v.$space-2 0;
+    border-bottom: 1px solid v.$color-border;
+  }
+
+  dt { color: v.$color-text-muted; font-size: v.$fs-sm; }
+  dd { font-weight: 600; }
+}
+
+.review-list {
+  @include m.flex(column, flex-start, stretch, v.$space-4);
+  margin: v.$space-4 0;
+}
+
+.review-card {
+  @include m.card();
+  padding: v.$space-4;
+
+  h4 { margin: v.$space-1 0; }
+
+  footer {
+    margin-top: v.$space-2;
+    font-size: v.$fs-xs;
+    color: v.$color-text-muted;
+  }
+}
+
+.availability-calendar {
+  @include m.grid(7, 4px);
+
+  &__hint {
+    grid-column: 1 / -1;
+    color: v.$color-text-muted;
+    font-size: v.$fs-sm;
+  }
+
+  &__day {
+    aspect-ratio: 1 / 1;
+    @include m.flex(column, center, center);
+    border-radius: 6px;
+    font-size: v.$fs-xs;
+    background: v.$color-success-bg;
+    color: v.$color-success;
+
+    &.is-limited { background: v.$color-warning-bg; color: v.$color-warning; }
+    &.is-sold-out { background: v.$color-danger-bg; color: v.$color-danger; }
+  }
+}
+
+.profile-avatar-row {
+  @include m.flex(row, flex-start, center, v.$space-4);
+  margin-bottom: v.$space-6;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+
+  &--placeholder {
+    @include m.flex(row, center, center);
+    background: v.$color-primary;
+    color: v.$color-text-inverse;
+    font-family: v.$font-heading;
+    font-size: v.$fs-xl;
+  }
+}

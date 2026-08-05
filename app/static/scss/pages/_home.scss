@@ -1,0 +1,92 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.hero {
+  position: relative;
+  min-height: 640px;
+  @include m.flex(column, flex-end, flex-start);
+  padding-top: v.$space-9;
+  overflow: hidden;
+
+  &__media {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(160deg, rgba(10, 77, 104, 0.55), rgba(7, 25, 35, 0.75)),
+      radial-gradient(circle at 30% 20%, v.$color-primary-light, v.$color-primary-dark 70%);
+    background-size: cover;
+    animation: hero-pan 20s ease-in-out infinite alternate;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, v.$color-bg 0%, transparent 30%);
+  }
+
+  &__inner {
+    position: relative;
+    z-index: 2;
+    color: v.$color-text-inverse;
+    padding-bottom: v.$space-8;
+    max-width: 760px;
+  }
+
+  &__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: v.$fs-xs;
+    font-weight: 700;
+    color: v.$color-accent-light;
+    margin-bottom: v.$space-3;
+    animation: fade-up 700ms ease both;
+  }
+
+  &__title {
+    color: v.$color-text-inverse;
+    font-size: v.$fs-3xl;
+    margin-bottom: v.$space-4;
+    animation: fade-up 700ms 100ms ease both;
+
+    @include m.respond(md) {
+      font-size: v.$fs-4xl;
+    }
+  }
+
+  &__lead {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: v.$fs-md;
+    max-width: 520px;
+    animation: fade-up 700ms 200ms ease both;
+  }
+}
+
+@keyframes hero-pan {
+  from { transform: scale(1) translate(0, 0); }
+  to { transform: scale(1.08) translate(-1%, -1%); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.newsletter-section {
+  background: linear-gradient(135deg, v.$color-primary, v.$color-primary-dark);
+  color: v.$color-text-inverse;
+  border-radius: v.$radius-lg;
+  margin: 0 v.$space-5;
+
+  @include m.respond(md) {
+    margin: 0 auto;
+    max-width: v.$container-max;
+  }
+
+  &__inner {
+    text-align: center;
+    padding: v.$space-7 v.$space-5;
+
+    h2 { color: v.$color-text-inverse; margin-bottom: v.$space-2; }
+    p { color: rgba(255, 255, 255, 0.8); margin-bottom: v.$space-2; }
+  }
+}

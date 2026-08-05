@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Something Went Wrong — {{ HOTEL_NAME }}{% endblock %}
+{% block content %}
+<section class="section error-page">
+  <div class="container container--narrow">
+    <p class="error-page__code">500</p>
+    <h1>Something Went Wrong</h1>
+    <p>We're experiencing a technical issue. Please try again shortly.</p>
+    <a href="{{ url_for('hotel.home') }}" class="btn btn--primary">Back to Home</a>
+  </div>
+</section>
+{% endblock %}

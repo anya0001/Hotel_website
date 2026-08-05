@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "macros/ui.html" import room_card %}
+{% block title %}Saved Rooms — {{ HOTEL_NAME }}{% endblock %}
+{% block body_class %}page-account{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="page-header__eyebrow">Account</p>
+    <h1>Saved Rooms</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container account-layout">
+    {% include "auth/_account_nav.html" %}
+
+    <div class="account-content">
+      {% if favorites %}
+        <div class="room-grid">
+          {% for fav in favorites %}{{ room_card(fav.room) }}{% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <h3>No saved rooms yet</h3>
+          <p>Tap the heart icon on any room to save it here.</p>
+          <a href="{{ url_for('hotel.rooms') }}" class="btn btn--primary">Browse Rooms</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

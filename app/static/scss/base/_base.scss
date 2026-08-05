@@ -1,0 +1,115 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.container {
+  width: 100%;
+  max-width: v.$container-max;
+  margin: 0 auto;
+  padding: 0 v.$space-5;
+
+  &--narrow {
+    max-width: 760px;
+  }
+}
+
+.section {
+  padding: v.$space-8 0;
+
+  &--muted {
+    background: v.$color-neutral-bg;
+  }
+}
+
+.skip-link {
+  @include m.visually-hidden;
+
+  &:focus {
+    position: fixed;
+    top: v.$space-3;
+    left: v.$space-3;
+    width: auto;
+    height: auto;
+    padding: v.$space-2 v.$space-4;
+    background: v.$color-primary;
+    color: v.$color-text-inverse;
+    border-radius: v.$radius-sm;
+    z-index: 999;
+    clip: auto;
+  }
+}
+
+.section-cta {
+  text-align: center;
+  margin-top: v.$space-6;
+}
+
+.card-panel {
+  @include m.card();
+  padding: v.$space-6;
+
+  h3 {
+    margin-bottom: v.$space-4;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: v.$space-8 v.$space-5;
+  background: v.$color-surface;
+  border-radius: v.$radius-md;
+  box-shadow: v.$shadow-sm;
+
+  h3 { margin-bottom: v.$space-2; }
+  p { color: v.$color-text-muted; margin-bottom: v.$space-4; }
+}
+
+.map-embed {
+  border-radius: v.$radius-md;
+  overflow: hidden;
+  box-shadow: v.$shadow-sm;
+  margin-top: v.$space-5;
+}
+
+::selection {
+  background: v.$color-accent-light;
+  color: v.$color-primary-dark;
+}
+
+// Flash messages -----------------------------------------------
+.flash-stack {
+  position: fixed;
+  top: calc(#{v.$header-height} + #{v.$space-3});
+  right: v.$space-4;
+  z-index: v.$z-overlay;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+  max-width: 340px;
+}
+
+.flash-message {
+  @include m.flex(row, space-between, center, v.$space-3);
+  padding: v.$space-3 v.$space-4;
+  border-radius: v.$radius-md;
+  box-shadow: v.$shadow-md;
+  font-size: v.$fs-sm;
+  animation: flash-in v.$transition-base;
+
+  &--success { background: v.$color-success-bg; color: v.$color-success; }
+  &--danger { background: v.$color-danger-bg; color: v.$color-danger; }
+  &--warning { background: v.$color-warning-bg; color: v.$color-warning; }
+  &--info { background: v.$color-surface; color: v.$color-primary; border: 1px solid v.$color-border; }
+
+  &__close {
+    font-size: 1.1rem;
+    line-height: 1;
+    opacity: 0.6;
+
+    &:hover { opacity: 1; }
+  }
+}
+
+@keyframes flash-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,7 @@
+@use '../abstracts/variables' as v;
+
+// Reserved for alternate seasonal palettes (e.g. a winter promo theme).
+// Toggle by adding `theme-winter` to <body class="">.
+.theme-winter {
+  --accent-override: #{v.$color-primary-light};
+}

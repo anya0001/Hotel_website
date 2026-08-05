@@ -1,0 +1,48 @@
+{% extends "admin/_layout.html" %}
+{% from "macros/ui.html" import flask_pagination %}
+{% block title %}Manage Rooms — Admin{% endblock %}
+{% block admin_title %}Rooms{% endblock %}
+
+{% block admin_content %}
+<div class="admin-content__toolbar">
+  <a href="{{ url_for('admin.room_new') }}" class="btn btn--primary">+ Add Room</a>
+</div>
+
+<div class="card-panel">
+  <table class="admin-table">
+    <thead>
+      <tr><th>Room</th><th>Type</th><th>Price</th><th>Units</th><th>Rating</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for room in pagination.items %}
+        <tr>
+          <td>
+            <div class="admin-table__room">
+              {% if room.primary_image %}
+                <img src="{{ url_for('static', filename='images/uploads/' + room.primary_image.thumbnail_filename) }}" alt="">
+              {% endif %}
+              <span>{{ room.name }}</span>
+            </div>
+          </td>
+          <td>{{ room.room_type }}</td>
+          <td>${{ '%.0f'|format(room.effective_price) }}{% if room.discount_percent %} <span class="muted-text">(-{{ room.discount_percent }}%)</span>{% endif %}</td>
+          <td>{{ room.total_units }}</td>
+          <td>{{ room.average_rating }} ({{ room.review_count }})</td>
+          <td><span class="badge badge--{{ 'success' if room.is_active else 'neutral' }}">{{ 'Active' if room.is_active else 'Hidden' }}</span></td>
+          <td class="admin-table__actions">
+            <a href="{{ url_for('admin.room_edit', room_id=room.id) }}" class="btn btn--outline btn--sm">Edit</a>
+            <form method="post" action="{{ url_for('admin.room_delete', room_id=room.id) }}" onsubmit="return confirm('Delete this room permanently?')">
+              {{ delete_form.hidden_tag() }}
+              <button type="submit" class="btn btn--ghost btn--sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7" class="muted-text">No rooms yet. Add your first room to get started.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{{ flask_pagination(pagination, 'admin.rooms_list') }}
+{% endblock %}
