@@ -1,7 +1,7 @@
 """
 Application configuration.
 
-Config is selected via the FLASK_ENV / FLASK_CONFIG environment variable.
+Config is selected via the FLASK_CONFIG environment variable.
 DevelopmentConfig -> SQLite (zero-setup local dev)
 ProductionConfig  -> PostgreSQL (Render / any Postgres host)
 """
@@ -12,7 +12,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class BaseConfig:
-    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-me")
+    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-secret-key-change-me")
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
@@ -46,15 +46,16 @@ class BaseConfig:
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
-    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "no-reply@luxstay-hotel.com")
+    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "no-reply@your-hotel.example")
     MAIL_SUPPRESS_SEND = os.environ.get("MAIL_SUPPRESS_SEND", "1") == "1"
 
-    HOTEL_NAME = "LuxStay Hotel & Resort"
-    HOTEL_PHONE = "+1 (555) 019-2842"
-    HOTEL_EMAIL = "reservations@luxstay-hotel.com"
-    HOTEL_ADDRESS = "18 Marina Boulevard, Coral Bay"
-    HOTEL_LAT = 25.0805
-    HOTEL_LNG = 55.1403
+    # Hotel identity / contact details. Override these in .env for a client deployment.
+    HOTEL_NAME = os.environ.get("HOTEL_NAME", "LuxStay Hotel & Resort")
+    HOTEL_PHONE = os.environ.get("HOTEL_PHONE", "+1 (555) 019-2842")
+    HOTEL_EMAIL = os.environ.get("HOTEL_EMAIL", "reservations@luxstay-hotel.com")
+    HOTEL_ADDRESS = os.environ.get("HOTEL_ADDRESS", "18 Marina Boulevard, Coral Bay")
+    HOTEL_LAT = float(os.environ.get("HOTEL_LAT", "25.0805"))
+    HOTEL_LNG = float(os.environ.get("HOTEL_LNG", "55.1403"))
 
     # Simple in-memory rate limiting defaults (see app/extensions.py)
     RATELIMIT_DEFAULT = "200 per hour"
@@ -76,9 +77,10 @@ class TestingConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
+    SECRET_KEY = os.environ.get("SECRET_KEY")
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL", "").replace(
         "postgres://", "postgresql://", 1
-    ) or os.environ.get("DEV_DATABASE_URL", "sqlite:///" + os.path.join(basedir, "instance", "hotel.sqlite"))
+    )
 
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
