@@ -4,13 +4,21 @@
 {% block admin_title %}Bookings{% endblock %}
 
 {% block admin_content %}
-<div class="admin-content__toolbar">
+<div class="admin-content__toolbar admin-bookings-toolbar">
+  <form method="get" action="{{ url_for('admin.bookings_list') }}" class="admin-booking-search">
+    {% if status_filter %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
+    <label class="sr-only" for="booking-search">Search bookings</label>
+    <input id="booking-search" type="search" name="q" value="{{ search }}" placeholder="Search reference, guest, email or room…" autocomplete="off">
+    <button type="submit" class="btn btn--primary btn--sm">Search</button>
+    {% if search %}<a href="{{ url_for('admin.bookings_list', status=status_filter) }}" class="btn btn--outline btn--sm">Clear</a>{% endif %}
+  </form>
+
   <div class="admin-filter-pills">
-    <a href="{{ url_for('admin.bookings_list') }}" class="{{ 'is-active' if not status_filter }}">All</a>
-    <a href="{{ url_for('admin.bookings_list', status='pending') }}" class="{{ 'is-active' if status_filter == 'pending' }}">Pending</a>
-    <a href="{{ url_for('admin.bookings_list', status='confirmed') }}" class="{{ 'is-active' if status_filter == 'confirmed' }}">Confirmed</a>
-    <a href="{{ url_for('admin.bookings_list', status='completed') }}" class="{{ 'is-active' if status_filter == 'completed' }}">Completed</a>
-    <a href="{{ url_for('admin.bookings_list', status='cancelled') }}" class="{{ 'is-active' if status_filter == 'cancelled' }}">Cancelled</a>
+    <a href="{{ url_for('admin.bookings_list', q=search) }}" class="{{ 'is-active' if not status_filter }}">All</a>
+    <a href="{{ url_for('admin.bookings_list', status='pending', q=search) }}" class="{{ 'is-active' if status_filter == 'pending' }}">Pending</a>
+    <a href="{{ url_for('admin.bookings_list', status='confirmed', q=search) }}" class="{{ 'is-active' if status_filter == 'confirmed' }}">Confirmed</a>
+    <a href="{{ url_for('admin.bookings_list', status='completed', q=search) }}" class="{{ 'is-active' if status_filter == 'completed' }}">Completed</a>
+    <a href="{{ url_for('admin.bookings_list', status='cancelled', q=search) }}" class="{{ 'is-active' if status_filter == 'cancelled' }}">Cancelled</a>
   </div>
 </div>
 
@@ -23,12 +31,15 @@
       {% for booking in pagination.items %}
         <tr>
           <td>{{ booking.reference }}</td>
-          <td>{{ booking.user.full_name }}</td>
+          <td>
+            <strong>{{ booking.user.full_name }}</strong>
+            <span class="admin-table__subtext">{{ booking.user.email }}</span>
+          </td>
           <td>{{ booking.room.name }}</td>
           <td>{{ booking.check_in.strftime('%b %d') }} – {{ booking.check_out.strftime('%b %d, %Y') }}</td>
           <td>${{ '%.2f'|format(booking.total_price) }}</td>
           <td>
-            <form method="post" action="{{ url_for('admin.booking_update_status', booking_id=booking.id) }}" class="inline-status-form">
+            <form method="post" action="{{ url_for('admin.booking_update_status', booking_id=booking.id, q=search, status=status_filter) }}" class="inline-status-form">
               {{ status_form.hidden_tag() }}
               <select name="status" onchange="this.form.submit()">
                 {% for value, label in [('pending','Pending'),('confirmed','Confirmed'),('completed','Completed'),('cancelled','Cancelled')] %}
@@ -40,11 +51,11 @@
           <td><a href="{{ url_for('booking.confirmation', reference=booking.reference) }}" class="btn btn--outline btn--sm">View</a></td>
         </tr>
       {% else %}
-        <tr><td colspan="7" class="muted-text">No bookings found.</td></tr>
+        <tr><td colspan="7" class="muted-text">No bookings found. Try a different search or filter.</td></tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
 
-{{ flask_pagination(pagination, 'admin.bookings_list', status=status_filter) }}
+{{ flask_pagination(pagination, 'admin.bookings_list', status=status_filter, q=search) }}
 {% endblock %}
