@@ -7,7 +7,6 @@
 <div class="admin-content__toolbar admin-bookings-toolbar">
   <form method="get" action="{{ url_for('admin.bookings_list') }}" class="admin-booking-search">
     {% if status_filter %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
-    <label class="sr-only" for="booking-search">Search bookings</label>
     <input id="booking-search" type="search" name="q" value="{{ search }}" placeholder="Search reference, guest, email or room…" autocomplete="off">
     <button type="submit" class="btn btn--primary btn--sm">Search</button>
     {% if search %}<a href="{{ url_for('admin.bookings_list', status=status_filter) }}" class="btn btn--outline btn--sm">Clear</a>{% endif %}
