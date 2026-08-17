@@ -16,9 +16,9 @@
 .status-dropdown__trigger {
   list-style: none;
   min-width: 100px;
-  padding: 8px 28px 8px 10px;
+  padding: 7px 28px 7px 12px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 999px;
   color: #1F2A33;
   font-size: 0.75rem;
   font-weight: 700;
@@ -66,7 +66,7 @@
 }
 
 .status-dropdown[open] .status-dropdown__trigger {
-  border-radius: 6px 6px 0 0;
+  border-radius: 999px 999px 0 0;
 }
 
 .status-dropdown[open] .status-dropdown__trigger::after {
@@ -89,7 +89,7 @@
 .status-dropdown__option {
   display: block;
   width: 100%;
-  padding: 8px 10px;
+  padding: 8px 12px;
   border: 0;
   background: #FFFFFF;
   color: #1F2A33;
@@ -102,36 +102,34 @@
   transition: background 150ms ease, color 150ms ease;
 }
 
-.status-dropdown__option:hover,
-.status-dropdown__option:focus-visible {
-  background: #D9C08F;
-  color: #073349;
-}
-
-.status-dropdown__option.is-current {
-  font-weight: 700;
-}
-
 .status-dropdown__option[value="pending"]:hover,
-.status-dropdown__option[value="pending"]:focus-visible {
+.status-dropdown__option[value="pending"]:focus-visible,
+.status-dropdown__option[value="pending"].is-current {
   background: #FBF0DA;
   color: #A9740E;
 }
 
 .status-dropdown__option[value="confirmed"]:hover,
-.status-dropdown__option[value="confirmed"]:focus-visible {
+.status-dropdown__option[value="confirmed"]:focus-visible,
+.status-dropdown__option[value="confirmed"].is-current {
   background: #E7F5EE;
   color: #2E7D5B;
 }
 
 .status-dropdown__option[value="completed"]:hover,
-.status-dropdown__option[value="completed"]:focus-visible {
+.status-dropdown__option[value="completed"]:focus-visible,
+.status-dropdown__option[value="completed"].is-current {
   background: rgba(20, 106, 140, 0.10);
   color: #146A8C;
 }
 
 .status-dropdown__option[value="cancelled"]:hover,
-.status-dropdown__option[value="cancelled"]:focus-visible {
+.status-dropdown__option[value="cancelled"]:focus-visible,
+.status-dropdown__option[value="cancelled"].is-current {
   background: #FBEAE6;
   color: #B9432F;
+}
+
+.status-dropdown__option.is-current {
+  font-weight: 700;
 }
