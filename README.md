@@ -31,22 +31,21 @@ pip install -r requirements.txt
 cp .env.example .env             # then edit values as needed
 export FLASK_APP=run.py          # Windows: set FLASK_APP=run.py
 
-flask db init                    # already generated in this repo — skip if migrations/ exists
-flask db migrate -m "Initial schema"
 flask db upgrade
-
-flask seed-db                    # populates rooms, users, bookings, reviews, gallery, FAQs, promos
+flask seed-db
 flask run
 ```
 
 Visit `http://localhost:5000`.
 
-**Demo accounts:** The seed command creates demo users for local development.
-For production deployments, create your own administrator account with:
+### Demo accounts
 
-```bash
-flask create-admin
-```
+`flask seed-db` creates one admin account and several customer accounts for local development. Their passwords are never stored in the source code.
+
+- To choose a password before seeding, set `DEMO_PASSWORD` in your `.env` file.
+- If `DEMO_PASSWORD` is blank, the seed command generates a random password and prints it once in the terminal.
+- The admin email created by the seed command is `admin@luxstay-hotel.com`.
+- For production deployments, create your own administrator with `flask create-admin` instead of relying on seeded accounts.
 
 **Do not use seeded/demo credentials in a production deployment.**
 
@@ -63,7 +62,13 @@ A compiled `app/static/css/main.css` is already checked in, so the app runs imme
 
 ## Database migrations
 
-This project uses Flask-Migrate (Alembic). After changing `app/models.py`:
+This project uses Flask-Migrate (Alembic). The repository already includes the migration history, so a fresh install should use:
+
+```bash
+flask db upgrade
+```
+
+After changing `app/models.py` during development:
 
 ```bash
 flask db migrate -m "Describe the change"
@@ -78,7 +83,7 @@ flask db upgrade
    - Start command: `gunicorn run:app`
 3. Create a Render **PostgreSQL** instance and attach it — Render sets `DATABASE_URL` automatically, which `config.py`'s `ProductionConfig` reads (and normalizes `postgres://` to `postgresql://`).
 4. Set environment variables in the Render dashboard: `SECRET_KEY`, `FLASK_CONFIG=production`, and mail credentials if you want real emails to send (`MAIL_SUPPRESS_SEND=0`, `MAIL_USERNAME`, `MAIL_PASSWORD`).
-5. After the first deploy, run migrations and seed data from a Render shell:
+5. After the first deploy, run migrations and create your own administrator from a Render shell:
    ```bash
    flask db upgrade
    flask create-admin
