@@ -11,3 +11,4 @@ app/static/images/uploads/
 node_modules/
 *.egg-info/
 .pytest_cache/
+*.css.map
