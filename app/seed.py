@@ -4,9 +4,14 @@ production-ready out of the box. Run with: flask seed-db
 
 Uses solid-color placeholder JPGs (generated on the fly with Pillow) for
 room/gallery images so the project has zero external asset dependencies.
+
+Demo account passwords are supplied through the DEMO_PASSWORD environment
+variable. If it is not set, a one-time random password is generated and
+printed to the terminal instead of storing a password in source code.
 """
 import os
 import random
+import secrets
 from datetime import date, timedelta
 
 from PIL import Image, ImageDraw
@@ -149,10 +154,12 @@ def _make_placeholder(subfolder, seed_key, size=(1200, 800)):
 
 def run_seed():
     db.create_all()
+    demo_password = os.environ.get("DEMO_PASSWORD") or secrets.token_urlsafe(16)
+    generated_demo_password = "DEMO_PASSWORD" not in os.environ
 
     if User.query.filter_by(role="admin").first() is None:
         admin = User(full_name="Hotel Administrator", email="admin@luxstay-hotel.com", role="admin")
-        admin.set_password("Admin@12345")
+        admin.set_password(demo_password)
         db.session.add(admin)
 
     amenity_objs = {}
@@ -194,7 +201,7 @@ def run_seed():
                 email=f"{first.lower()}.{last.lower()}@example.com",
                 role="customer", is_active=True,
             )
-            user.set_password("Password123!")
+            user.set_password(demo_password)
             db.session.add(user)
             customers.append(user)
         db.session.commit()
@@ -259,3 +266,7 @@ def run_seed():
         ))
 
     db.session.commit()
+    if generated_demo_password:
+        print("Demo accounts were seeded with a randomly generated password:")
+        print(f"  Password: {demo_password}")
+        print("Use this password for the seeded demo accounts, or set DEMO_PASSWORD before seeding to choose one.")
