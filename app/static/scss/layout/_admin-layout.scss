@@ -14,9 +14,7 @@
   color: rgba(255, 255, 255, 0.85);
   padding: v.$space-5 v.$space-4;
 
-  @include m.respond(lg) {
-    display: block;
-  }
+  @include m.respond(lg) { display: block; }
 
   &__brand {
     @include m.flex(row, flex-start, center, v.$space-2);
@@ -40,21 +38,14 @@
     @include m.flex(column, flex-start, stretch, v.$space-1);
 
     a {
-      padding: v.$space-3 v.$space-3;
+      padding: v.$space-3;
       border-radius: v.$radius-sm;
       font-size: v.$fs-sm;
       font-weight: 600;
       color: rgba(255, 255, 255, 0.75);
 
-      &:hover {
-        background: rgba(255, 255, 255, 0.08);
-        color: v.$color-text-inverse;
-      }
-
-      &.is-active {
-        background: v.$color-accent;
-        color: v.$color-primary-dark;
-      }
+      &:hover { background: rgba(255, 255, 255, 0.08); color: v.$color-text-inverse; }
+      &.is-active { background: v.$color-accent; color: v.$color-primary-dark; }
     }
 
     hr {
@@ -77,16 +68,8 @@
   background: v.$color-surface;
   border-bottom: 1px solid v.$color-border;
 
-  h1 {
-    font-size: v.$fs-xl;
-    margin: 0;
-  }
-
-  &__user {
-    font-size: v.$fs-sm;
-    font-weight: 600;
-    color: v.$color-text-muted;
-  }
+  h1 { font-size: v.$fs-xl; margin: 0; }
+  &__user { font-size: v.$fs-sm; font-weight: 600; color: v.$color-text-muted; }
 }
 
 .admin-content {
@@ -100,23 +83,25 @@
   }
 }
 
-// Booking search: intentionally spacious so it reads as a primary control,
-// while the status filters sit below it instead of competing for width.
+// Booking toolbar: search stays primary and wide; status filters share the row
+// without being squeezed into the search controls.
 .admin-bookings-toolbar {
-  display: block;
+  @include m.flex(row, space-between, center, v.$space-6);
+  width: 100%;
   margin-bottom: v.$space-6;
   padding: v.$space-1 0;
 
   .admin-booking-search {
-    @include m.flex(row, flex-start, center, v.$space-4);
-    width: 100%;
-    margin: 0 0 v.$space-5;
+    @include m.flex(row, flex-start, center, v.$space-3);
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
 
     input[type='search'] {
       flex: 1 1 auto;
+      min-width: 260px;
       width: 100%;
-      min-width: 0;
-      height: 52px;
+      height: 50px;
       padding: v.$space-3 v.$space-5;
       border: 1px solid v.$color-border;
       border-radius: v.$radius-lg;
@@ -128,10 +113,7 @@
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.035);
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
-      &::placeholder {
-        color: v.$color-text-muted;
-      }
-
+      &::placeholder { color: v.$color-text-muted; }
       &:focus {
         border-color: v.$color-primary;
         box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
@@ -140,31 +122,47 @@
 
     .btn {
       flex: 0 0 auto;
-      min-height: 52px;
-      padding-inline: v.$space-6;
+      min-height: 50px;
+      padding-inline: v.$space-5;
       border-radius: v.$radius-lg;
       white-space: nowrap;
     }
   }
 
   .admin-filter-pills {
-    width: 100%;
-    justify-content: flex-start;
-    gap: v.$space-3;
+    @include m.flex(row, flex-start, center, v.$space-2);
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 45%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 1200px) {
+    gap: v.$space-4;
+
+    .admin-filter-pills {
+      max-width: 42%;
+    }
+  }
+
+  @media (max-width: 900px) {
+    flex-wrap: wrap;
+
+    .admin-booking-search,
+    .admin-filter-pills {
+      width: 100%;
+      max-width: none;
+    }
+
+    .admin-filter-pills { justify-content: flex-start; }
   }
 
   @media (max-width: 767px) {
     .admin-booking-search {
       flex-wrap: wrap;
-      gap: v.$space-3;
 
-      input[type='search'] {
-        flex-basis: 100%;
-      }
-
-      .btn {
-        flex: 0 0 auto;
-      }
+      input[type='search'] { min-width: 0; flex-basis: 100%; }
     }
   }
 }
@@ -173,9 +171,7 @@
   @include m.grid(1, v.$space-5);
   margin-bottom: v.$space-5;
 
-  @include m.respond(lg) {
-    grid-template-columns: 2fr 1fr;
-  }
+  @include m.respond(lg) { grid-template-columns: 2fr 1fr; }
 }
 
 .admin-filter-pills {
@@ -190,11 +186,9 @@
     font-size: v.$fs-sm;
     font-weight: 600;
     white-space: nowrap;
+    transition: border-color 0.2s ease, background 0.2s ease;
 
-    &:hover {
-      border-color: v.$color-primary;
-    }
-
+    &:hover { border-color: v.$color-primary; }
     &.is-active {
       background: v.$color-primary;
       color: v.$color-text-inverse;
