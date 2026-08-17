@@ -100,30 +100,32 @@
   }
 }
 
+// Booking search: intentionally spacious so it reads as a primary control,
+// while the status filters sit below it instead of competing for width.
 .admin-bookings-toolbar {
-  align-items: stretch;
-  gap: v.$space-5;
+  display: block;
+  margin-bottom: v.$space-6;
   padding: v.$space-1 0;
 
   .admin-booking-search {
-    @include m.flex(row, flex-start, center, v.$space-3);
-    flex: 1 1 500px;
-    min-width: min(100%, 320px);
-    margin: 0;
+    @include m.flex(row, flex-start, center, v.$space-4);
+    width: 100%;
+    margin: 0 0 v.$space-5;
 
     input[type='search'] {
-      flex: 1;
+      flex: 1 1 auto;
+      width: 100%;
       min-width: 0;
-      height: 48px;
-      padding: v.$space-2 v.$space-5;
+      height: 52px;
+      padding: v.$space-3 v.$space-5;
       border: 1px solid v.$color-border;
-      border-radius: v.$radius-pill;
+      border-radius: v.$radius-lg;
       background: v.$color-surface;
       color: v.$color-text;
       font: inherit;
       font-size: v.$fs-sm;
       outline: none;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.035);
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
       &::placeholder {
@@ -137,34 +139,32 @@
     }
 
     .btn {
-      flex-shrink: 0;
-      min-height: 48px;
-      padding-inline: v.$space-5;
-      border-radius: v.$radius-pill;
+      flex: 0 0 auto;
+      min-height: 52px;
+      padding-inline: v.$space-6;
+      border-radius: v.$radius-lg;
+      white-space: nowrap;
     }
   }
 
   .admin-filter-pills {
-    flex: 0 1 auto;
-    align-self: center;
-    justify-content: flex-end;
+    width: 100%;
+    justify-content: flex-start;
     gap: v.$space-3;
   }
 
-  @include m.respond(md) {
-    .admin-booking-search {
-      min-width: 0;
-    }
-  }
-
   @media (max-width: 767px) {
-    .admin-booking-search,
-    .admin-filter-pills {
-      width: 100%;
-    }
+    .admin-booking-search {
+      flex-wrap: wrap;
+      gap: v.$space-3;
 
-    .admin-filter-pills {
-      justify-content: flex-start;
+      input[type='search'] {
+        flex-basis: 100%;
+      }
+
+      .btn {
+        flex: 0 0 auto;
+      }
     }
   }
 }
@@ -189,6 +189,11 @@
     border: 1px solid v.$color-border;
     font-size: v.$fs-sm;
     font-weight: 600;
+    white-space: nowrap;
+
+    &:hover {
+      border-color: v.$color-primary;
+    }
 
     &.is-active {
       background: v.$color-primary;
