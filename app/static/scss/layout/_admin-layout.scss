@@ -100,6 +100,70 @@
   }
 }
 
+.admin-bookings-toolbar {
+  align-items: stretch;
+  gap: v.$space-4;
+
+  .admin-booking-search {
+    @include m.flex(row, flex-start, center, v.$space-2);
+    flex: 1 1 420px;
+    min-width: min(100%, 280px);
+    margin: 0;
+
+    input[type='search'] {
+      flex: 1;
+      min-width: 0;
+      height: 42px;
+      padding: v.$space-2 v.$space-4;
+      border: 1px solid v.$color-border;
+      border-radius: v.$radius-md;
+      background: v.$color-surface;
+      color: v.$color-text;
+      font: inherit;
+      font-size: v.$fs-sm;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+      &::placeholder {
+        color: v.$color-text-muted;
+      }
+
+      &:focus {
+        border-color: v.$color-primary;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+      }
+    }
+
+    .btn {
+      flex-shrink: 0;
+    }
+  }
+
+  .admin-filter-pills {
+    flex: 0 1 auto;
+    align-self: center;
+    justify-content: flex-end;
+    gap: v.$space-2;
+  }
+
+  @include m.respond(md) {
+    .admin-booking-search {
+      min-width: 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .admin-booking-search,
+    .admin-filter-pills {
+      width: 100%;
+    }
+
+    .admin-filter-pills {
+      justify-content: flex-start;
+    }
+  }
+}
+
 .admin-panel-grid {
   @include m.grid(1, v.$space-5);
   margin-bottom: v.$space-5;
