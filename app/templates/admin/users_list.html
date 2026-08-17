@@ -4,8 +4,17 @@
 {% block admin_title %}Users{% endblock %}
 
 {% block admin_content %}
+<div class="admin-content__toolbar admin-bookings-toolbar">
+  <form class="admin-booking-search" data-admin-search-form data-search-table="users-table">
+    <label class="sr-only" for="user-search">Search users</label>
+    <input id="user-search" type="search" placeholder="Search name, email or role…" autocomplete="off">
+    <button type="submit" class="btn btn--primary btn--sm">Search</button>
+    <button type="button" class="btn btn--outline btn--sm" data-search-clear hidden>Clear</button>
+  </form>
+</div>
+
 <div class="card-panel">
-  <table class="admin-table">
+  <table class="admin-table" id="users-table">
     <thead>
       <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th></th></tr>
     </thead>
