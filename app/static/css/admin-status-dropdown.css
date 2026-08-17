@@ -17,11 +17,11 @@
   list-style: none;
   min-width: 100px;
   padding: 8px 28px 8px 10px;
+  border: 0;
   border-radius: 6px;
-  background: #FFFFFF;
   color: #1F2A33;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.4;
   cursor: pointer;
   position: relative;
@@ -39,10 +39,30 @@
   right: 10px;
   width: 6px;
   height: 6px;
-  border-right: 1.5px solid #6B7580;
-  border-bottom: 1.5px solid #6B7580;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
   transform: translateY(-65%) rotate(45deg);
   transition: transform 150ms ease;
+}
+
+.status-dropdown__trigger--pending {
+  background: #FBF0DA;
+  color: #A9740E;
+}
+
+.status-dropdown__trigger--confirmed {
+  background: #E7F5EE;
+  color: #2E7D5B;
+}
+
+.status-dropdown__trigger--completed {
+  background: rgba(20, 106, 140, 0.10);
+  color: #146A8C;
+}
+
+.status-dropdown__trigger--cancelled {
+  background: #FBEAE6;
+  color: #B9432F;
 }
 
 .status-dropdown[open] .status-dropdown__trigger {
@@ -60,6 +80,7 @@
   min-width: 100%;
   padding: 0 0 4px;
   background: #FFFFFF;
+  border: 0;
   border-radius: 0 0 6px 6px;
   box-shadow: 0 8px 24px rgba(10, 20, 30, 0.08);
   overflow: hidden;
@@ -69,6 +90,7 @@
   display: block;
   width: 100%;
   padding: 8px 10px;
+  border: 0;
   background: #FFFFFF;
   color: #1F2A33;
   font-size: 0.75rem;
@@ -76,6 +98,7 @@
   line-height: 1.4;
   text-align: left;
   white-space: nowrap;
+  cursor: pointer;
   transition: background 150ms ease, color 150ms ease;
 }
 
@@ -87,4 +110,28 @@
 
 .status-dropdown__option.is-current {
   font-weight: 700;
+}
+
+.status-dropdown__option[value="pending"]:hover,
+.status-dropdown__option[value="pending"]:focus-visible {
+  background: #FBF0DA;
+  color: #A9740E;
+}
+
+.status-dropdown__option[value="confirmed"]:hover,
+.status-dropdown__option[value="confirmed"]:focus-visible {
+  background: #E7F5EE;
+  color: #2E7D5B;
+}
+
+.status-dropdown__option[value="completed"]:hover,
+.status-dropdown__option[value="completed"]:focus-visible {
+  background: rgba(20, 106, 140, 0.10);
+  color: #146A8C;
+}
+
+.status-dropdown__option[value="cancelled"]:hover,
+.status-dropdown__option[value="cancelled"]:focus-visible {
+  background: #FBEAE6;
+  color: #B9432F;
 }
