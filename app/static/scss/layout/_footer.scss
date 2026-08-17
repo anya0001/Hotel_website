@@ -5,6 +5,7 @@
   background: v.$color-primary-dark;
   color: rgba(255, 255, 255, 0.85);
   margin-top: v.$space-9;
+  padding: v.$space-6;
 
   &__grid {
     @include m.grid(1, v.$space-6);

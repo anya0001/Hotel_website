@@ -4,7 +4,8 @@
 .hero {
   position: relative;
   min-height: 640px;
-  @include m.flex(column, flex-end, flex-start);
+  @include m.flex(column, flex-start);
+  padding-bottom: v.$space-9;
   padding-top: v.$space-9;
   overflow: hidden;
 
@@ -15,7 +16,7 @@
       linear-gradient(160deg, rgba(10, 77, 104, 0.55), rgba(7, 25, 35, 0.75)),
       radial-gradient(circle at 30% 20%, v.$color-primary-light, v.$color-primary-dark 70%);
     background-size: cover;
-    animation: hero-pan 20s ease-in-out infinite alternate;
+    // animation: hero-pan 20s ease-in-out infinite alternate;
   }
 
   &__overlay {
@@ -28,8 +29,8 @@
     position: relative;
     z-index: 2;
     color: v.$color-text-inverse;
-    padding-bottom: v.$space-8;
     max-width: 760px;
+    margin-bottom: 160px;
   }
 
   &__eyebrow {
