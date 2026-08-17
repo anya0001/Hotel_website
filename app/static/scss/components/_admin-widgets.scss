@@ -51,10 +51,9 @@
     padding: 8px 28px 8px 10px;
     border: 0;
     border-radius: v.$radius-sm;
-    background: v.$color-surface;
     color: v.$color-text;
     font-size: v.$fs-xs;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.4;
     cursor: pointer;
     position: relative;
@@ -69,10 +68,30 @@
       right: 10px;
       width: 6px;
       height: 6px;
-      border-right: 1.5px solid v.$color-text-muted;
-      border-bottom: 1.5px solid v.$color-text-muted;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
       transform: translateY(-65%) rotate(45deg);
       transition: transform v.$transition-fast;
+    }
+
+    &--pending {
+      background: v.$color-warning-bg;
+      color: v.$color-warning;
+    }
+
+    &--confirmed {
+      background: v.$color-success-bg;
+      color: v.$color-success;
+    }
+
+    &--completed {
+      background: rgba(20, 106, 140, 0.10);
+      color: v.$color-primary-light;
+    }
+
+    &--cancelled {
+      background: v.$color-danger-bg;
+      color: v.$color-danger;
     }
   }
 
@@ -108,10 +127,32 @@
     cursor: pointer;
     transition: background v.$transition-fast, color v.$transition-fast;
 
-    &:hover,
-    &:focus-visible {
-      background: v.$color-accent-light;
-      color: v.$color-primary-dark;
+    &--pending:hover,
+    &--pending:focus-visible,
+    &--pending.is-current {
+      background: v.$color-warning-bg;
+      color: v.$color-warning;
+    }
+
+    &--confirmed:hover,
+    &--confirmed:focus-visible,
+    &--confirmed.is-current {
+      background: v.$color-success-bg;
+      color: v.$color-success;
+    }
+
+    &--completed:hover,
+    &--completed:focus-visible,
+    &--completed.is-current {
+      background: rgba(20, 106, 140, 0.10);
+      color: v.$color-primary-light;
+    }
+
+    &--cancelled:hover,
+    &--cancelled:focus-visible,
+    &--cancelled.is-current {
+      background: v.$color-danger-bg;
+      color: v.$color-danger;
     }
 
     &.is-current { font-weight: 700; }
