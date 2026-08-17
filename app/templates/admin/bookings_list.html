@@ -41,11 +41,16 @@
           <td>
             <form method="post" action="{{ url_for('admin.booking_update_status', booking_id=booking.id, q=search, status=status_filter) }}" class="inline-status-form">
               {{ status_form.hidden_tag() }}
-              <select name="status" onchange="this.form.submit()">
-                {% for value, label in [('pending','Pending'),('confirmed','Confirmed'),('completed','Completed'),('cancelled','Cancelled')] %}
-                  <option value="{{ value }}" {{ 'selected' if booking.status == value }}>{{ label }}</option>
-                {% endfor %}
-              </select>
+              <details class="status-dropdown">
+                <summary class="status-dropdown__trigger status-dropdown__trigger--{{ booking.status }}">
+                  {{ booking.status|capitalize }}
+                </summary>
+                <div class="status-dropdown__menu">
+                  {% for value, label in [('pending','Pending'),('confirmed','Confirmed'),('completed','Completed'),('cancelled','Cancelled')] %}
+                    <button type="submit" name="status" value="{{ value }}" class="status-dropdown__option {{ 'is-current' if booking.status == value }}">{{ label }}</button>
+                  {% endfor %}
+                </div>
+              </details>
             </form>
           </td>
           <td><a href="{{ url_for('booking.confirmation', reference=booking.reference) }}" class="btn btn--outline btn--sm">View</a></td>
