@@ -4,12 +4,18 @@
 {% block admin_title %}Rooms{% endblock %}
 
 {% block admin_content %}
-<div class="admin-content__toolbar">
+<div class="admin-content__toolbar admin-bookings-toolbar">
+  <form class="admin-booking-search" data-admin-search-form data-search-table="rooms-table">
+    <label class="sr-only" for="room-search">Search rooms</label>
+    <input id="room-search" type="search" placeholder="Search rooms, types or status…" autocomplete="off">
+    <button type="submit" class="btn btn--primary btn--sm">Search</button>
+    <button type="button" class="btn btn--outline btn--sm" data-search-clear hidden>Clear</button>
+  </form>
   <a href="{{ url_for('admin.room_new') }}" class="btn btn--primary">+ Add Room</a>
 </div>
 
 <div class="card-panel">
-  <table class="admin-table">
+  <table class="admin-table" id="rooms-table">
     <thead>
       <tr><th>Room</th><th>Type</th><th>Price</th><th>Units</th><th>Rating</th><th>Status</th><th></th></tr>
     </thead>
