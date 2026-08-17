@@ -48,9 +48,9 @@
   &__trigger {
     list-style: none;
     min-width: 100px;
-    padding: 8px 28px 8px 10px;
+    padding: 7px 28px 7px 12px;
     border: 0;
-    border-radius: v.$radius-sm;
+    border-radius: 999px;
     color: v.$color-text;
     font-size: v.$fs-xs;
     font-weight: 700;
@@ -74,28 +74,13 @@
       transition: transform v.$transition-fast;
     }
 
-    &--pending {
-      background: v.$color-warning-bg;
-      color: v.$color-warning;
-    }
-
-    &--confirmed {
-      background: v.$color-success-bg;
-      color: v.$color-success;
-    }
-
-    &--completed {
-      background: rgba(20, 106, 140, 0.10);
-      color: v.$color-primary-light;
-    }
-
-    &--cancelled {
-      background: v.$color-danger-bg;
-      color: v.$color-danger;
-    }
+    &--pending { background: v.$color-warning-bg; color: v.$color-warning; }
+    &--confirmed { background: v.$color-success-bg; color: v.$color-success; }
+    &--completed { background: rgba(20, 106, 140, 0.10); color: v.$color-primary-light; }
+    &--cancelled { background: v.$color-danger-bg; color: v.$color-danger; }
   }
 
-  &[open] .status-dropdown__trigger { border-radius: v.$radius-sm v.$radius-sm 0 0; }
+  &[open] .status-dropdown__trigger { border-radius: 999px 999px 0 0; }
   &[open] .status-dropdown__trigger::after { transform: translateY(-25%) rotate(225deg); }
 
   &__menu {
@@ -114,7 +99,7 @@
   &__option {
     display: block;
     width: 100%;
-    padding: 8px 10px;
+    padding: 8px 12px;
     border: 0;
     background: v.$color-surface;
     color: v.$color-text;
@@ -127,33 +112,21 @@
     cursor: pointer;
     transition: background v.$transition-fast, color v.$transition-fast;
 
-    &--pending:hover,
-    &--pending:focus-visible,
-    &--pending.is-current {
-      background: v.$color-warning-bg;
-      color: v.$color-warning;
-    }
+    &[value='pending']:hover,
+    &[value='pending']:focus-visible,
+    &[value='pending'].is-current { background: v.$color-warning-bg; color: v.$color-warning; }
 
-    &--confirmed:hover,
-    &--confirmed:focus-visible,
-    &--confirmed.is-current {
-      background: v.$color-success-bg;
-      color: v.$color-success;
-    }
+    &[value='confirmed']:hover,
+    &[value='confirmed']:focus-visible,
+    &[value='confirmed'].is-current { background: v.$color-success-bg; color: v.$color-success; }
 
-    &--completed:hover,
-    &--completed:focus-visible,
-    &--completed.is-current {
-      background: rgba(20, 106, 140, 0.10);
-      color: v.$color-primary-light;
-    }
+    &[value='completed']:hover,
+    &[value='completed']:focus-visible,
+    &[value='completed'].is-current { background: rgba(20, 106, 140, 0.10); color: v.$color-primary-light; }
 
-    &--cancelled:hover,
-    &--cancelled:focus-visible,
-    &--cancelled.is-current {
-      background: v.$color-danger-bg;
-      color: v.$color-danger;
-    }
+    &[value='cancelled']:hover,
+    &[value='cancelled']:focus-visible,
+    &[value='cancelled'].is-current { background: v.$color-danger-bg; color: v.$color-danger; }
 
     &.is-current { font-weight: 700; }
   }
