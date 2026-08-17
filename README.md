@@ -41,9 +41,14 @@ flask run
 
 Visit `http://localhost:5000`.
 
-**Seeded admin login:** `admin@luxstay-hotel.com` / `Admin@12345` — change this immediately in any real deployment, or run `flask create-admin` to create your own.
+**Demo accounts:** The seed command creates demo users for local development.
+For production deployments, create your own administrator account with:
 
-**Seeded customer login (any of these):** e.g. `amara.bennett@example.com` / `Password123!`
+```bash
+flask create-admin
+```
+
+**Do not use seeded/demo credentials in a production deployment.**
 
 ## SCSS
 
@@ -97,7 +102,6 @@ app/
   models.py    SQLAlchemy models
   forms.py     WTForms definitions
   utils.py     image upload/compression, slugify, booking reference generation
-  seed.py      demo data generator
 config.py      environment-based configuration
 run.py         application entry point
 ```
