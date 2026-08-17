@@ -102,26 +102,28 @@
 
 .admin-bookings-toolbar {
   align-items: stretch;
-  gap: v.$space-4;
+  gap: v.$space-5;
+  padding: v.$space-1 0;
 
   .admin-booking-search {
-    @include m.flex(row, flex-start, center, v.$space-2);
-    flex: 1 1 420px;
-    min-width: min(100%, 280px);
+    @include m.flex(row, flex-start, center, v.$space-3);
+    flex: 1 1 500px;
+    min-width: min(100%, 320px);
     margin: 0;
 
     input[type='search'] {
       flex: 1;
       min-width: 0;
-      height: 42px;
-      padding: v.$space-2 v.$space-4;
+      height: 48px;
+      padding: v.$space-2 v.$space-5;
       border: 1px solid v.$color-border;
-      border-radius: v.$radius-md;
+      border-radius: v.$radius-pill;
       background: v.$color-surface;
       color: v.$color-text;
       font: inherit;
       font-size: v.$fs-sm;
       outline: none;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
       &::placeholder {
@@ -136,6 +138,9 @@
 
     .btn {
       flex-shrink: 0;
+      min-height: 48px;
+      padding-inline: v.$space-5;
+      border-radius: v.$radius-pill;
     }
   }
 
@@ -143,7 +148,7 @@
     flex: 0 1 auto;
     align-self: center;
     justify-content: flex-end;
-    gap: v.$space-2;
+    gap: v.$space-3;
   }
 
   @include m.respond(md) {
