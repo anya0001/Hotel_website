@@ -91,14 +91,15 @@
 
   .admin-booking-search {
     @include m.flex(row, flex-start, center, v.$space-3);
-    flex: 1 1 auto;
+    flex: 1 1 420px;
     min-width: 0;
     margin: 0;
+    white-space: nowrap;
 
     input[type='search'] {
       flex: 1 1 auto;
-      min-width: 260px;
-      width: 100%;
+      min-width: 0;
+      width: auto;
       padding: v.$space-2 v.$space-4;
       border: 1px solid v.$color-border;
       border-radius: v.$radius-lg;
@@ -137,28 +138,24 @@
   @media (max-width: 1200px) {
     gap: v.$space-4;
 
-    .admin-filter-pills {
-      max-width: 42%;
-    }
+    .admin-filter-pills { max-width: 42%; }
   }
 
   @media (max-width: 900px) {
-    flex-wrap: wrap;
-
-    .admin-booking-search,
+    .admin-booking-search { flex-basis: 100%; }
     .admin-filter-pills {
       width: 100%;
       max-width: none;
+      justify-content: flex-start;
     }
-
-    .admin-filter-pills { justify-content: flex-start; }
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 480px) {
     .admin-booking-search {
       flex-wrap: wrap;
+      white-space: normal;
 
-      input[type='search'] { min-width: 0; flex-basis: 100%; }
+      input[type='search'] { flex: 1 1 100%; }
     }
   }
 }
