@@ -79,11 +79,95 @@
   }
 }
 
-.inline-status-form select {
-  padding: 8px 10px;
-  border-radius: v.$radius-sm;
-  border: 1px solid v.$color-border;
-  font-size: v.$fs-xs;
+.inline-status-form {
+  position: relative;
+}
+
+.status-dropdown {
+  position: relative;
+  width: max-content;
+  min-width: 100px;
+  z-index: 1;
+
+  &[open] {
+    z-index: v.$z-dropdown;
+  }
+
+  &__trigger {
+    list-style: none;
+    min-width: 100px;
+    padding: 8px 28px 8px 10px;
+    border-radius: v.$radius-sm;
+    background: v.$color-surface;
+    color: v.$color-text;
+    font-size: v.$fs-xs;
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+    position: relative;
+    white-space: nowrap;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      width: 6px;
+      height: 6px;
+      border-right: 1.5px solid v.$color-text-muted;
+      border-bottom: 1.5px solid v.$color-text-muted;
+      transform: translateY(-65%) rotate(45deg);
+      transition: transform v.$transition-fast;
+    }
+  }
+
+  &[open] &__trigger {
+    border-radius: v.$radius-sm v.$radius-sm 0 0;
+
+    &::after {
+      transform: translateY(-25%) rotate(225deg);
+    }
+  }
+
+  &__menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 100%;
+    padding: 0 0 v.$space-1;
+    background: v.$color-surface;
+    border-radius: 0 0 v.$radius-sm v.$radius-sm;
+    box-shadow: v.$shadow-md;
+    overflow: hidden;
+  }
+
+  &__option {
+    display: block;
+    width: 100%;
+    padding: 8px 10px;
+    background: v.$color-surface;
+    color: v.$color-text;
+    font-size: v.$fs-xs;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: left;
+    white-space: nowrap;
+    transition: background v.$transition-fast, color v.$transition-fast;
+
+    &:hover,
+    &:focus-visible {
+      background: v.$color-accent-light;
+      color: v.$color-primary-dark;
+    }
+
+    &.is-current {
+      font-weight: 700;
+    }
+  }
 }
 
 .admin-form {
