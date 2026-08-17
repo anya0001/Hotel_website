@@ -7,8 +7,22 @@ from app.extensions import db, migrate, login_manager, csrf, mail
 
 def create_app(config_name=None):
     config_name = config_name or os.environ.get("FLASK_CONFIG", "default")
+    if config_name not in config_map:
+        raise ValueError(f"Unknown FLASK_CONFIG: {config_name}")
+
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config_map[config_name])
+
+    if config_name == "production":
+        missing = [
+            name
+            for name in ("SECRET_KEY", "SQLALCHEMY_DATABASE_URI")
+            if not app.config.get(name)
+        ]
+        if missing:
+            raise RuntimeError(
+                "Production configuration requires: " + ", ".join(missing)
+            )
 
     os.makedirs(app.instance_path, exist_ok=True)
     os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
