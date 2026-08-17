@@ -28,8 +28,8 @@ python3 -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-cp .env.example .env             # then edit values as needed
-export FLASK_APP=run.py          # Windows: set FLASK_APP=run.py
+cp .env.example .env             # Windows PowerShell: Copy-Item .env.example .env
+export FLASK_APP=run.py          # Windows PowerShell: $env:FLASK_APP="run.py"
 
 flask db upgrade
 flask seed-db
@@ -48,6 +48,41 @@ Visit `http://localhost:5000`.
 - For production deployments, create your own administrator with `flask create-admin` instead of relying on seeded accounts.
 
 **Do not use seeded/demo credentials in a production deployment.**
+
+## Configuration
+
+Copy `.env.example` to `.env` and change the values for your deployment.
+
+### Local development
+
+The default development configuration uses SQLite, so no external database is required. `DEV_DATABASE_URL` can be changed if you want to use another development database.
+
+### Production
+
+Set:
+
+- `FLASK_CONFIG=production`
+- `SECRET_KEY` to a long, unpredictable value
+- `DATABASE_URL` to your PostgreSQL connection string
+
+The application intentionally refuses to start in production when `SECRET_KEY` or `DATABASE_URL` is missing. This prevents accidentally deploying with a known development secret or an unintended SQLite database.
+
+### Hotel information
+
+The following values can be customized through `.env` without editing Python code:
+
+- `HOTEL_NAME`
+- `HOTEL_PHONE`
+- `HOTEL_EMAIL`
+- `HOTEL_ADDRESS`
+- `HOTEL_LAT`
+- `HOTEL_LNG`
+
+These values are exposed to the Jinja templates as `HOTEL_*` configuration variables.
+
+### Email
+
+Email sending is disabled by default for local development. Configure `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, and `MAIL_DEFAULT_SENDER`, then set `MAIL_SUPPRESS_SEND=0` when you want real booking and password-reset emails to be delivered.
 
 ## SCSS
 
@@ -81,8 +116,8 @@ flask db upgrade
 2. Create a new **Web Service** on Render pointing at the repo.
    - Build command: `pip install -r requirements.txt`
    - Start command: `gunicorn run:app`
-3. Create a Render **PostgreSQL** instance and attach it — Render sets `DATABASE_URL` automatically, which `config.py`'s `ProductionConfig` reads (and normalizes `postgres://` to `postgresql://`).
-4. Set environment variables in the Render dashboard: `SECRET_KEY`, `FLASK_CONFIG=production`, and mail credentials if you want real emails to send (`MAIL_SUPPRESS_SEND=0`, `MAIL_USERNAME`, `MAIL_PASSWORD`).
+3. Create a Render **PostgreSQL** instance and attach it — Render provides `DATABASE_URL` for the service.
+4. Set `SECRET_KEY`, `FLASK_CONFIG=production`, and the hotel/mail environment variables in the Render dashboard.
 5. After the first deploy, run migrations and create your own administrator from a Render shell:
    ```bash
    flask db upgrade
