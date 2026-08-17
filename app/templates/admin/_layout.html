@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block body_class %}page-admin{% endblock %}
 
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-status-dropdown.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="admin-layout">
   <aside class="admin-sidebar">
