@@ -4,8 +4,17 @@
 {% block admin_title %}Messages{% endblock %}
 
 {% block admin_content %}
+<div class="admin-content__toolbar admin-bookings-toolbar">
+  <form class="admin-booking-search" data-admin-search-form data-search-table="messages-table">
+    <label class="sr-only" for="message-search">Search messages</label>
+    <input id="message-search" type="search" placeholder="Search name, email, subject or message…" autocomplete="off">
+    <button type="submit" class="btn btn--primary btn--sm">Search</button>
+    <button type="button" class="btn btn--outline btn--sm" data-search-clear hidden>Clear</button>
+  </form>
+</div>
+
 <div class="card-panel">
-  <table class="admin-table">
+  <table class="admin-table" id="messages-table">
     <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Received</th></tr></thead>
     <tbody>
       {% for message in pagination.items %}
