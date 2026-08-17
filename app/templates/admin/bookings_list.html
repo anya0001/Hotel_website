@@ -47,7 +47,7 @@
                 </summary>
                 <div class="status-dropdown__menu">
                   {% for value, label in [('pending','Pending'),('confirmed','Confirmed'),('completed','Completed'),('cancelled','Cancelled')] %}
-                    <button type="submit" name="status" value="{{ value }}" class="status-dropdown__option {{ 'is-current' if booking.status == value }}">{{ label }}</button>
+                    <button type="submit" name="status" value="{{ value }}" class="status-dropdown__option status-dropdown__option--{{ value }} {{ 'is-current' if booking.status == value }}">{{ label }}</button>
                   {% endfor %}
                 </div>
               </details>
