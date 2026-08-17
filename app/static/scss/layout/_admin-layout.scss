@@ -83,8 +83,6 @@
   }
 }
 
-// Booking toolbar: search stays primary and wide; status filters share the row
-// without being squeezed into the search controls.
 .admin-bookings-toolbar {
   @include m.flex(row, space-between, center, v.$space-6);
   width: 100%;
