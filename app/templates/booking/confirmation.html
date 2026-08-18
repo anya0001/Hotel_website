@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Booking Confirmed — {{ HOTEL_NAME }}{% endblock %}
+{% block title %}{{ 'Booking Details' if current_user.is_admin else 'Booking Confirmed' }} — {{ HOTEL_NAME }}{% endblock %}
 {% block body_class %}page-booking-confirmation{% endblock %}
 
 {% block content %}
@@ -7,11 +7,17 @@
   <div class="container container--narrow">
     <div class="confirmation-card card-panel">
       <div class="confirmation-card__icon">&#10003;</div>
-      <h1>Booking Confirmed!</h1>
-      <p class="muted-text">A confirmation email has been sent to {{ booking.user.email }}.</p>
+      <h1>{{ 'Booking Details' if current_user.is_admin else 'Booking Confirmed!' }}</h1>
+      {% if current_user.is_admin %}
+        <p class="muted-text">Review the booking details for {{ booking.user.full_name }}.</p>
+      {% else %}
+        <p class="muted-text">A confirmation email has been sent to {{ booking.user.email }}.</p>
+      {% endif %}
 
       <dl class="confirmation-details">
         <div><dt>Reference</dt><dd>{{ booking.reference }}</dd></div>
+        <div><dt>Guest</dt><dd>{{ booking.user.full_name }}</dd></div>
+        <div><dt>Email</dt><dd>{{ booking.user.email }}</dd></div>
         <div><dt>Room</dt><dd>{{ booking.room.name }}</dd></div>
         <div><dt>Check-in</dt><dd>{{ booking.check_in.strftime('%A, %B %d, %Y') }}</dd></div>
         <div><dt>Check-out</dt><dd>{{ booking.check_out.strftime('%A, %B %d, %Y') }}</dd></div>
@@ -22,8 +28,12 @@
       </dl>
 
       <div class="confirmation-card__actions">
-        <a href="{{ url_for('booking.history') }}" class="btn btn--primary">View My Bookings</a>
-        <a href="{{ url_for('hotel.rooms') }}" class="btn btn--outline">Browse More Rooms</a>
+        {% if current_user.is_admin %}
+          <a href="{{ url_for('admin.bookings_list') }}" class="btn btn--primary">Back to Bookings</a>
+        {% else %}
+          <a href="{{ url_for('booking.history') }}" class="btn btn--primary">View My Bookings</a>
+          <a href="{{ url_for('hotel.rooms') }}" class="btn btn--outline">Browse More Rooms</a>
+        {% endif %}
       </div>
     </div>
   </div>
