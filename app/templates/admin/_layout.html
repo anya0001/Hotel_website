@@ -3,6 +3,9 @@
 
 {% block head_extra %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-status-dropdown.css') }}">
+{% if request.endpoint in ['admin.messages_list', 'admin.message_detail'] %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-messages.css') }}">
+{% endif %}
 {% endblock %}
 
 {% block content %}
