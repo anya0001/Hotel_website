@@ -38,9 +38,6 @@
         <div class="admin-message-card__status" aria-hidden="true"></div>
 
         <div class="admin-message-card__identity">
-          <div class="admin-message-card__avatar" aria-hidden="true">
-            {{ (message.name or '?')[:1]|upper }}
-          </div>
           <div class="admin-message-card__sender">
             <strong>{{ message.name }}</strong>
             <a href="mailto:{{ message.email }}" title="Email {{ message.name }}">{{ message.email }}</a>
