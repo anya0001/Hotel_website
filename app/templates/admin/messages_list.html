@@ -15,7 +15,7 @@
 
 <div class="card-panel">
   <table class="admin-table" id="messages-table">
-    <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Received</th></tr></thead>
+    <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Received</th><th></th></tr></thead>
     <tbody>
       {% for message in pagination.items %}
         <tr>
@@ -24,9 +24,12 @@
           <td>{{ message.subject or '—' }}</td>
           <td class="admin-table__review">{{ message.message[:100] }}{{ '…' if message.message|length > 100 }}</td>
           <td>{{ message.created_at.strftime('%b %d, %Y') }}</td>
+          <td class="admin-table__actions">
+            <a href="{{ url_for('admin.message_detail', message_id=message.id) }}" class="btn btn--outline btn--sm">View</a>
+          </td>
         </tr>
       {% else %}
-        <tr><td colspan="5" class="muted-text">No messages yet.</td></tr>
+        <tr><td colspan="6" class="muted-text">No messages yet.</td></tr>
       {% endfor %}
     </tbody>
   </table>
