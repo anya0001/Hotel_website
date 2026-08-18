@@ -435,7 +435,7 @@ def gallery_list():
         flash("Image added to gallery.", "success")
         return redirect(url_for("admin.gallery_list"))
 
-    images = GalleryImage.query.order_by(GalleryImage.position).all()
+    images = GalleryImage.query.order_by(GalleryImage.position, GalleryImage.created_at.desc()).all()
     delete_form = DeleteForm()
     return render_template("admin/gallery_list.html", images=images, form=form, delete_form=delete_form)
 
@@ -443,14 +443,14 @@ def gallery_list():
 @admin_bp.route("/gallery/<int:image_id>/delete", methods=["POST"])
 @admin_required
 def gallery_delete(image_id):
-    delete_form = DeleteForm()
+    form = DeleteForm()
     image = GalleryImage.query.get_or_404(image_id)
-    if delete_form.validate_on_submit():
+    if form.validate_on_submit():
         delete_image(image.filename)
         delete_image(image.thumbnail_filename)
         db.session.delete(image)
         db.session.commit()
-        flash("Image deleted.", "info")
+        flash("Gallery image deleted.", "info")
     return redirect(url_for("admin.gallery_list"))
 
 
@@ -458,36 +458,12 @@ def gallery_delete(image_id):
 # Promotions
 # ---------------------------------------------------------------------------
 
-@admin_bp.route("/promotions", methods=["GET", "POST"])
+@admin_bp.route("/promotions")
 @admin_required
 def promotions_list():
-    form = PromotionForm()
-    if form.validate_on_submit():
-        image_filename = None
-        if form.image.data:
-            try:
-                image_filename, _ = save_image(form.image.data, subfolder="promotions")
-            except ValueError as exc:
-                flash(str(exc), "danger")
-                return redirect(url_for("admin.promotions_list"))
-
-        db.session.add(Promotion(
-            title=form.title.data.strip(),
-            description=form.description.data,
-            code=form.code.data.upper().strip() if form.code.data else None,
-            discount_percent=form.discount_percent.data,
-            starts_on=form.starts_on.data,
-            ends_on=form.ends_on.data,
-            is_active=form.is_active.data,
-            image_filename=image_filename,
-        ))
-        db.session.commit()
-        flash("Promotion created.", "success")
-        return redirect(url_for("admin.promotions_list"))
-
-    promotions = Promotion.query.order_by(Promotion.id.desc()).all()
+    promotions = Promotion.query.order_by(Promotion.starts_on.desc().nullslast(), Promotion.created_at.desc() if hasattr(Promotion, 'created_at') else Promotion.id.desc()).all()
     delete_form = DeleteForm()
-    return render_template("admin/promotions_list.html", promotions=promotions, form=form, delete_form=delete_form)
+    return render_template("admin/promotions_list.html", promotions=promotions, delete_form=delete_form)
 
 
 @admin_bp.route("/promotions/<int:promo_id>/delete", methods=["POST"])
@@ -496,7 +472,6 @@ def promotion_delete(promo_id):
     form = DeleteForm()
     promo = Promotion.query.get_or_404(promo_id)
     if form.validate_on_submit():
-        delete_image(promo.image_filename)
         db.session.delete(promo)
         db.session.commit()
         flash("Promotion deleted.", "info")
@@ -600,3 +575,13 @@ def messages_list():
         m.is_read = True
     db.session.commit()
     return render_template("admin/messages_list.html", pagination=pagination, search=search)
+
+
+@admin_bp.route("/messages/<int:message_id>")
+@admin_required
+def message_detail(message_id):
+    message = ContactMessage.query.get_or_404(message_id)
+    if not message.is_read:
+        message.is_read = True
+        db.session.commit()
+    return render_template("admin/message_detail.html", message=message)
