@@ -5,11 +5,11 @@
 
 {% block admin_content %}
 <div class="admin-content__toolbar admin-bookings-toolbar">
-  <form class="admin-booking-search" data-admin-search-form data-search-table="users-table">
+  <form class="admin-booking-search" method="get" action="{{ url_for('admin.users_list') }}">
     <label class="sr-only" for="user-search">Search users</label>
-    <input id="user-search" type="search" placeholder="Search name, email or role…" autocomplete="off">
+    <input id="user-search" name="q" type="search" value="{{ search or '' }}" placeholder="Search name, email or role…" autocomplete="off">
     <button type="submit" class="btn btn--primary btn--sm">Search</button>
-    <button type="button" class="btn btn--outline btn--sm" data-search-clear hidden>Clear</button>
+    {% if search %}<a href="{{ url_for('admin.users_list') }}" class="btn btn--outline btn--sm">Clear</a>{% endif %}
   </form>
 </div>
 
