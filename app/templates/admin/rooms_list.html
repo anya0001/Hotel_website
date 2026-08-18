@@ -5,11 +5,11 @@
 
 {% block admin_content %}
 <div class="admin-content__toolbar admin-bookings-toolbar">
-  <form class="admin-booking-search" data-admin-search-form data-search-table="rooms-table">
+  <form class="admin-booking-search" method="get" action="{{ url_for('admin.rooms_list') }}">
     <label class="sr-only" for="room-search">Search rooms</label>
-    <input id="room-search" type="search" placeholder="Search rooms, types or status…" autocomplete="off">
+    <input id="room-search" name="q" type="search" value="{{ search or '' }}" placeholder="Search rooms, types or status…" autocomplete="off">
     <button type="submit" class="btn btn--primary btn--sm">Search</button>
-    <button type="button" class="btn btn--outline btn--sm" data-search-clear hidden>Clear</button>
+    {% if search %}<a href="{{ url_for('admin.rooms_list') }}" class="btn btn--outline btn--sm">Clear</a>{% endif %}
   </form>
   <a href="{{ url_for('admin.room_new') }}" class="btn btn--primary">+ Add Room</a>
 </div>
