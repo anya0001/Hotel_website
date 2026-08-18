@@ -1,0 +1,36 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Message — Admin{% endblock %}
+{% block admin_title %}Message Details{% endblock %}
+
+{% block admin_content %}
+<div class="admin-message-detail card-panel">
+  <div class="admin-message-detail__header">
+    <div>
+      <span class="admin-message-detail__eyebrow">Contact message</span>
+      <h2>{{ message.subject or 'No subject' }}</h2>
+    </div>
+    <span class="admin-message-detail__date">{{ message.created_at.strftime('%b %d, %Y at %I:%M %p') }}</span>
+  </div>
+
+  <div class="admin-message-detail__meta">
+    <div>
+      <span>Name</span>
+      <strong>{{ message.name }}</strong>
+    </div>
+    <div>
+      <span>Email</span>
+      <a href="mailto:{{ message.email }}">{{ message.email }}</a>
+    </div>
+  </div>
+
+  <div class="admin-message-detail__body">
+    <span class="admin-message-detail__label">Message</span>
+    <p>{{ message.message }}</p>
+  </div>
+
+  <div class="admin-message-detail__actions">
+    <a href="mailto:{{ message.email }}?subject={{ ('Re: ' ~ (message.subject or 'Your message to LuxStay'))|urlencode }}" class="btn btn--primary">Reply by email</a>
+    <a href="{{ url_for('admin.messages_list') }}" class="btn btn--outline">Back to Messages</a>
+  </div>
+</div>
+{% endblock %}
