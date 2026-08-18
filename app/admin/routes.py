@@ -51,7 +51,6 @@ def dashboard():
         "unread_messages": ContactMessage.query.filter_by(is_read=False).count(),
     }
 
-    # Last 6 months revenue for the chart
     monthly_labels, monthly_revenue = [], []
     months = []
     cursor = month_start
@@ -98,11 +97,19 @@ def dashboard():
 @admin_required
 def rooms_list():
     page = request.args.get("page", 1, type=int)
-    pagination = Room.query.order_by(Room.created_at.desc()).paginate(
+    search = request.args.get("q", "").strip()
+    query = Room.query
+    if search:
+        search_term = f"%{search}%"
+        query = query.filter(or_(
+            Room.name.ilike(search_term),
+            Room.room_type.ilike(search_term),
+        ))
+    pagination = query.order_by(Room.created_at.desc()).paginate(
         page=page, per_page=current_app.config["ADMIN_ROWS_PER_PAGE"], error_out=False
     )
     delete_form = DeleteForm()
-    return render_template("admin/rooms_list.html", pagination=pagination, delete_form=delete_form)
+    return render_template("admin/rooms_list.html", pagination=pagination, delete_form=delete_form, search=search)
 
 
 @admin_bp.route("/rooms/new", methods=["GET", "POST"])
@@ -274,11 +281,20 @@ def booking_update_status(booking_id):
 @admin_required
 def users_list():
     page = request.args.get("page", 1, type=int)
-    pagination = User.query.order_by(User.created_at.desc()).paginate(
+    search = request.args.get("q", "").strip()
+    query = User.query
+    if search:
+        search_term = f"%{search}%"
+        query = query.filter(or_(
+            User.full_name.ilike(search_term),
+            User.email.ilike(search_term),
+            User.role.ilike(search_term),
+        ))
+    pagination = query.order_by(User.created_at.desc()).paginate(
         page=page, per_page=current_app.config["ADMIN_ROWS_PER_PAGE"], error_out=False
     )
     delete_form = DeleteForm()
-    return render_template("admin/users_list.html", pagination=pagination, delete_form=delete_form)
+    return render_template("admin/users_list.html", pagination=pagination, delete_form=delete_form, search=search)
 
 
 @admin_bp.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
@@ -411,7 +427,7 @@ def gallery_list():
             return redirect(url_for("admin.gallery_list"))
 
         db.session.add(GalleryImage(
-            filename=filename, thumbnail_filename=thumb, caption=form.caption.data,
+            filename=filename, thumbnail_filename=thumb, alt_text=form.caption.data,
             category=form.category.data, position=form.position.data or 0,
             is_published=form.is_published.data,
         ))
@@ -427,9 +443,9 @@ def gallery_list():
 @admin_bp.route("/gallery/<int:image_id>/delete", methods=["POST"])
 @admin_required
 def gallery_delete(image_id):
-    form = DeleteForm()
+    delete_form = DeleteForm()
     image = GalleryImage.query.get_or_404(image_id)
-    if form.validate_on_submit():
+    if delete_form.validate_on_submit():
         delete_image(image.filename)
         delete_image(image.thumbnail_filename)
         db.session.delete(image)
@@ -567,10 +583,20 @@ def homepage_settings():
 @admin_required
 def messages_list():
     page = request.args.get("page", 1, type=int)
-    pagination = ContactMessage.query.order_by(ContactMessage.created_at.desc()).paginate(
+    search = request.args.get("q", "").strip()
+    query = ContactMessage.query
+    if search:
+        search_term = f"%{search}%"
+        query = query.filter(or_(
+            ContactMessage.name.ilike(search_term),
+            ContactMessage.email.ilike(search_term),
+            ContactMessage.subject.ilike(search_term),
+            ContactMessage.message.ilike(search_term),
+        ))
+    pagination = query.order_by(ContactMessage.created_at.desc()).paginate(
         page=page, per_page=current_app.config["ADMIN_ROWS_PER_PAGE"], error_out=False
     )
     for m in pagination.items:
         m.is_read = True
     db.session.commit()
-    return render_template("admin/messages_list.html", pagination=pagination)
+    return render_template("admin/messages_list.html", pagination=pagination, search=search)
