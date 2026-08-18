@@ -171,3 +171,88 @@
     line-height: 1;
   }
 }
+
+.admin-message-detail {
+  max-width: 900px;
+  padding: v.$space-6;
+
+  &__header {
+    @include m.flex(row, space-between, flex-start, v.$space-4);
+    padding-bottom: v.$space-5;
+    border-bottom: 1px solid v.$color-border;
+
+    h2 {
+      margin: v.$space-1 0 0;
+      font-family: v.$font-heading;
+      font-size: v.$fs-xl;
+      color: v.$color-text;
+    }
+  }
+
+  &__eyebrow,
+  &__label {
+    display: block;
+    color: v.$color-text-muted;
+    font-size: v.$fs-xs;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__date {
+    color: v.$color-text-muted;
+    font-size: v.$fs-sm;
+    white-space: nowrap;
+  }
+
+  &__meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: v.$space-4;
+    padding: v.$space-5 0;
+    border-bottom: 1px solid v.$color-border;
+
+    div {
+      @include m.flex(column, flex-start, flex-start, v.$space-1);
+    }
+
+    span {
+      color: v.$color-text-muted;
+      font-size: v.$fs-xs;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    strong, a {
+      font-size: v.$fs-sm;
+      color: v.$color-text;
+    }
+
+    a { color: v.$color-primary; }
+  }
+
+  &__body {
+    padding: v.$space-6 0;
+
+    p {
+      margin: v.$space-3 0 0;
+      color: v.$color-text;
+      font-size: v.$fs-md;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__actions {
+    @include m.flex(row, flex-end, center, v.$space-3);
+    padding-top: v.$space-5;
+    border-top: 1px solid v.$color-border;
+  }
+
+  @include m.respond(sm) {
+    &__header { flex-direction: column; }
+    &__meta { grid-template-columns: 1fr; }
+    &__actions { flex-direction: column; align-items: stretch; }
+  }
+}
