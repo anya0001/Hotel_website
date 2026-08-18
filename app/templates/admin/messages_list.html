@@ -26,6 +26,10 @@
           <td>{{ message.created_at.strftime('%b %d, %Y') }}</td>
           <td class="admin-table__actions">
             <a href="{{ url_for('admin.message_detail', message_id=message.id) }}" class="btn btn--outline btn--sm">View</a>
+            <form method="post" action="{{ url_for('admin.message_delete', message_id=message.id) }}" onsubmit="return confirm('Delete this message? This action cannot be undone.');">
+              {{ delete_form.hidden_tag() }}
+              <button type="submit" class="btn btn--danger btn--sm">Delete</button>
+            </form>
           </td>
         </tr>
       {% else %}
