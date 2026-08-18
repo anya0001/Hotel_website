@@ -450,7 +450,7 @@ def gallery_delete(image_id):
         delete_image(image.thumbnail_filename)
         db.session.delete(image)
         db.session.commit()
-        flash("Gallery image deleted.", "info")
+        flash("Image removed.", "info")
     return redirect(url_for("admin.gallery_list"))
 
 
@@ -458,12 +458,27 @@ def gallery_delete(image_id):
 # Promotions
 # ---------------------------------------------------------------------------
 
-@admin_bp.route("/promotions")
+@admin_bp.route("/promotions", methods=["GET", "POST"])
 @admin_required
 def promotions_list():
-    promotions = Promotion.query.order_by(Promotion.starts_on.desc().nullslast(), Promotion.created_at.desc() if hasattr(Promotion, 'created_at') else Promotion.id.desc()).all()
+    form = PromotionForm()
+    if form.validate_on_submit():
+        promo = Promotion(
+            code=form.code.data.strip().upper(),
+            description=form.description.data.strip(),
+            discount_percent=form.discount_percent.data,
+            starts_at=form.starts_at.data,
+            ends_at=form.ends_at.data,
+            is_active=form.is_active.data,
+        )
+        db.session.add(promo)
+        db.session.commit()
+        flash(f'Promotion "{promo.code}" created.', "success")
+        return redirect(url_for("admin.promotions_list"))
+
+    promotions = Promotion.query.order_by(Promotion.created_at.desc()).all()
     delete_form = DeleteForm()
-    return render_template("admin/promotions_list.html", promotions=promotions, delete_form=delete_form)
+    return render_template("admin/promotions_list.html", promotions=promotions, form=form, delete_form=delete_form)
 
 
 @admin_bp.route("/promotions/<int:promo_id>/delete", methods=["POST"])
@@ -474,7 +489,7 @@ def promotion_delete(promo_id):
     if form.validate_on_submit():
         db.session.delete(promo)
         db.session.commit()
-        flash("Promotion deleted.", "info")
+        flash("Promotion removed.", "info")
     return redirect(url_for("admin.promotions_list"))
 
 
@@ -574,7 +589,8 @@ def messages_list():
     for m in pagination.items:
         m.is_read = True
     db.session.commit()
-    return render_template("admin/messages_list.html", pagination=pagination, search=search)
+    delete_form = DeleteForm()
+    return render_template("admin/messages_list.html", pagination=pagination, search=search, delete_form=delete_form)
 
 
 @admin_bp.route("/messages/<int:message_id>")
@@ -584,4 +600,17 @@ def message_detail(message_id):
     if not message.is_read:
         message.is_read = True
         db.session.commit()
-    return render_template("admin/message_detail.html", message=message)
+    delete_form = DeleteForm()
+    return render_template("admin/message_detail.html", message=message, delete_form=delete_form)
+
+
+@admin_bp.route("/messages/<int:message_id>/delete", methods=["POST"])
+@admin_required
+def message_delete(message_id):
+    form = DeleteForm()
+    message = ContactMessage.query.get_or_404(message_id)
+    if form.validate_on_submit():
+        db.session.delete(message)
+        db.session.commit()
+        flash("Message deleted.", "info")
+    return redirect(url_for("admin.messages_list"))
