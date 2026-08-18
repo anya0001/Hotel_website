@@ -1,25 +1,15 @@
-from flask import Blueprint, g
+from flask import Blueprint, g, request
 
 admin_bp = Blueprint("admin", __name__, template_folder="../templates/admin")
 
 
 @admin_bp.before_request
 def capture_message_read_state():
-    if g.get("message_read_state_captured"):
-        return
-
-    if getattr(g, "current_user", None) is None:
-        return
-
-    # The messages list should not mark messages as read just because the inbox was opened.
-    # Preserve the unread state for the current request so the existing list route can render
-    # normally, then restore those records after the response is rendered.
-    if getattr(__import__("flask").request, "endpoint", "") == "admin.messages_list":
+    if request.endpoint == "admin.messages_list":
         from app.models import ContactMessage
         unread_messages = ContactMessage.query.filter_by(is_read=False).all()
         g.message_unread_ids = {message.id for message in unread_messages}
         g.message_unread_count = len(unread_messages)
-        g.message_read_state_captured = True
 
 
 @admin_bp.after_request
@@ -41,7 +31,10 @@ def inject_admin_message_count():
     unread_count = g.get("message_unread_count")
     if unread_count is None:
         unread_count = ContactMessage.query.filter_by(is_read=False).count()
-    return {"unread_message_count": unread_count, "unread_message_ids": g.get("message_unread_ids", set())}
+    return {
+        "unread_message_count": unread_count,
+        "unread_message_ids": g.get("message_unread_ids", set()),
+    }
 
 
 from app.admin import decorators  # noqa: E402,F401
