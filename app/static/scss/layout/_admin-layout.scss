@@ -156,7 +156,6 @@
 
   @media (max-width: 1200px) {
     gap: v.$space-4;
-
     .admin-filter-pills { max-width: 42%; }
   }
 
@@ -173,7 +172,6 @@
     .admin-booking-search {
       flex-wrap: wrap;
       white-space: normal;
-
       input[type='search'] { flex: 1 1 100%; }
     }
   }
@@ -182,7 +180,6 @@
 .admin-panel-grid {
   @include m.grid(1, v.$space-5);
   margin-bottom: v.$space-5;
-
   @include m.respond(lg) { grid-template-columns: 2fr 1fr; }
 }
 
@@ -206,5 +203,28 @@
       color: v.$color-text-inverse;
       border-color: v.$color-primary;
     }
+  }
+}
+
+.admin-message-table {
+  .admin-message-row--unread {
+    background: rgba(20, 106, 140, 0.055);
+
+    td {
+      font-weight: 600;
+    }
+
+    .admin-table__review {
+      color: v.$color-text;
+    }
+  }
+
+  .admin-message-table__sender {
+    font-weight: 600;
+  }
+
+  .admin-table__actions {
+    min-width: 280px;
+    flex-wrap: wrap;
   }
 }
