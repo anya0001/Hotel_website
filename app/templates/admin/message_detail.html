@@ -30,6 +30,10 @@
   <div class="admin-message-detail__actions">
     <a href="mailto:{{ message.email }}?subject={{ ('Re: ' ~ (message.subject or 'Your message to LuxStay'))|urlencode }}" class="btn btn--primary">Reply by email</a>
     <a href="{{ url_for('admin.messages_list') }}" class="btn btn--outline">Back to Messages</a>
+    <form method="post" action="{{ url_for('admin.message_delete', message_id=message.id) }}" onsubmit="return confirm('Delete this message? This action cannot be undone.');">
+      {{ delete_form.hidden_tag() }}
+      <button type="submit" class="btn btn--danger">Delete message</button>
+    </form>
   </div>
 </div>
 {% endblock %}
