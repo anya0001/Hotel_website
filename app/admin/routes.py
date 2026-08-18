@@ -464,19 +464,20 @@ def promotions_list():
     form = PromotionForm()
     if form.validate_on_submit():
         promo = Promotion(
-            code=form.code.data.strip().upper(),
-            description=form.description.data.strip(),
+            title=form.title.data.strip(),
+            description=form.description.data.strip() if form.description.data else None,
+            code=form.code.data.strip().upper() if form.code.data else None,
             discount_percent=form.discount_percent.data,
-            starts_at=form.starts_at.data,
-            ends_at=form.ends_at.data,
+            starts_on=form.starts_on.data,
+            ends_on=form.ends_on.data,
             is_active=form.is_active.data,
         )
         db.session.add(promo)
         db.session.commit()
-        flash(f'Promotion "{promo.code}" created.', "success")
+        flash(f'Promotion "{promo.title}" created.', "success")
         return redirect(url_for("admin.promotions_list"))
 
-    promotions = Promotion.query.order_by(Promotion.created_at.desc()).all()
+    promotions = Promotion.query.order_by(Promotion.id.desc()).all()
     delete_form = DeleteForm()
     return render_template("admin/promotions_list.html", promotions=promotions, form=form, delete_form=delete_form)
 
@@ -586,9 +587,6 @@ def messages_list():
     pagination = query.order_by(ContactMessage.created_at.desc()).paginate(
         page=page, per_page=current_app.config["ADMIN_ROWS_PER_PAGE"], error_out=False
     )
-    for m in pagination.items:
-        m.is_read = True
-    db.session.commit()
     delete_form = DeleteForm()
     return render_template("admin/messages_list.html", pagination=pagination, search=search, delete_form=delete_form)
 
