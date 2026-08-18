@@ -6,26 +6,25 @@
 <div class="admin-message-detail card-panel">
   <div class="admin-message-detail__header">
     <div>
-      <span class="admin-message-detail__eyebrow">Contact message</span>
       <h2>{{ message.subject or 'No subject' }}</h2>
+      <span class="admin-message-detail__date">{{ message.created_at.strftime('%b %d, %Y at %I:%M %p') }}</span>
     </div>
-    <span class="admin-message-detail__date">{{ message.created_at.strftime('%b %d, %Y at %I:%M %p') }}</span>
   </div>
 
   <div class="admin-message-detail__meta">
-    <div>
-      <span>Name</span>
+    <div class="admin-message-detail__meta-item">
+      <span class="admin-message-detail__label">Name</span>
       <strong>{{ message.name }}</strong>
     </div>
-    <div>
-      <span>Email</span>
+    <div class="admin-message-detail__meta-item">
+      <span class="admin-message-detail__label">Email</span>
       <a href="mailto:{{ message.email }}">{{ message.email }}</a>
     </div>
   </div>
 
   <div class="admin-message-detail__body">
     <span class="admin-message-detail__label">Message</span>
-    <p>{{ message.message }}</p>
+    <div class="admin-message-detail__message">{{ message.message }}</div>
   </div>
 
   <div class="admin-message-detail__actions">
