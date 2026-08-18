@@ -4,46 +4,86 @@
 {% block admin_title %}Messages{% endblock %}
 
 {% block admin_content %}
-<div class="admin-content__toolbar admin-bookings-toolbar">
-  <form class="admin-booking-search" method="get" action="{{ url_for('admin.messages_list') }}">
-    <label class="sr-only" for="message-search">Search messages</label>
-    <input id="message-search" name="q" type="search" value="{{ search or '' }}" placeholder="Search name, email, subject or message…" autocomplete="off">
-    <button type="submit" class="btn btn--primary btn--sm">Search</button>
-    {% if search %}<a href="{{ url_for('admin.messages_list') }}" class="btn btn--outline btn--sm">Clear</a>{% endif %}
-  </form>
-</div>
+<section class="admin-messages" aria-labelledby="messages-heading">
+  <div class="admin-messages__intro">
+    <div>
+      <span class="admin-messages__eyebrow">Inbox</span>
+      <h2 id="messages-heading">Contact messages</h2>
+      <p>Keep on top of questions, requests, and guest conversations.</p>
+    </div>
+    {% if pagination.total %}
+      <div class="admin-messages__count">
+        <strong>{{ pagination.total }}</strong>
+        <span>{{ 'message' if pagination.total == 1 else 'messages' }}</span>
+      </div>
+    {% endif %}
+  </div>
 
-<div class="card-panel">
-  <table class="admin-table admin-message-table" id="messages-table">
-    <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Received</th><th></th></tr></thead>
-    <tbody>
-      {% for message in pagination.items %}
-        <tr class="{{ 'admin-message-row--unread' if message.id in unread_message_ids else '' }}">
-          <td class="admin-message-table__sender">{{ message.name }}</td>
-          <td><a href="mailto:{{ message.email }}">{{ message.email }}</a></td>
-          <td>{{ message.subject or '—' }}</td>
-          <td class="admin-table__review">{{ message.message[:100] }}{{ '…' if message.message|length > 100 }}</td>
-          <td>{{ message.created_at.strftime('%b %d, %Y') }}</td>
-          <td class="admin-table__actions">
-            <a href="{{ url_for('admin.message_detail', message_id=message.id) }}" class="btn btn--outline btn--sm">View</a>
-            <form method="post" action="{{ url_for('admin.message_toggle_read', message_id=message.id) }}">
-              {{ delete_form.hidden_tag() }}
-              <button type="submit" class="btn btn--outline btn--sm" title="{{ 'Mark as read' if message.id in unread_message_ids else 'Mark as unread' }}">
-                {{ 'Mark read' if message.id in unread_message_ids else 'Mark unread' }}
-              </button>
-            </form>
-            <form method="post" action="{{ url_for('admin.message_delete', message_id=message.id) }}" onsubmit="return confirm('Delete this message? This action cannot be undone.');">
-              {{ delete_form.hidden_tag() }}
-              <button type="submit" class="btn btn--danger btn--sm">Delete</button>
-            </form>
-          </td>
-        </tr>
-      {% else %}
-        <tr><td colspan="6" class="muted-text">No messages yet.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+  <div class="admin-messages__toolbar">
+    <form class="admin-messages__search" method="get" action="{{ url_for('admin.messages_list') }}">
+      <label class="sr-only" for="message-search">Search messages</label>
+      <span class="admin-messages__search-icon" aria-hidden="true"></span>
+      <input id="message-search" name="q" type="search" value="{{ search or '' }}" placeholder="Search messages…" autocomplete="off">
+      <button type="submit" class="btn btn--primary btn--sm">Search</button>
+      {% if search %}
+        <a href="{{ url_for('admin.messages_list') }}" class="btn btn--outline btn--sm">Clear</a>
+      {% endif %}
+    </form>
+  </div>
 
-{{ flask_pagination(pagination, 'admin.messages_list') }}
+  <div class="admin-messages__list" aria-live="polite">
+    {% for message in pagination.items %}
+      {% set unread = message.id in unread_message_ids %}
+      <article class="admin-message-card {{ 'is-unread' if unread else '' }}">
+        <div class="admin-message-card__status" aria-hidden="true"></div>
+
+        <div class="admin-message-card__identity">
+          <div class="admin-message-card__avatar" aria-hidden="true">
+            {{ (message.name or '?')[:1]|upper }}
+          </div>
+          <div class="admin-message-card__sender">
+            <strong>{{ message.name }}</strong>
+            <a href="mailto:{{ message.email }}" title="Email {{ message.name }}">{{ message.email }}</a>
+          </div>
+        </div>
+
+        <div class="admin-message-card__content">
+          <div class="admin-message-card__heading">
+            <h3>{{ message.subject or 'No subject' }}</h3>
+            {% if unread %}<span class="admin-message-card__badge">Unread</span>{% endif %}
+          </div>
+          <p>{{ message.message[:150] }}{{ '…' if message.message|length > 150 }}</p>
+        </div>
+
+        <time class="admin-message-card__date" datetime="{{ message.created_at.isoformat() }}">
+          <span>{{ message.created_at.strftime('%b %d, %Y') }}</span>
+          <small>{{ message.created_at.strftime('%H:%M') }}</small>
+        </time>
+
+        <div class="admin-message-card__actions">
+          <a href="{{ url_for('admin.message_detail', message_id=message.id) }}" class="btn btn--primary btn--sm">View</a>
+          <form method="post" action="{{ url_for('admin.message_toggle_read', message_id=message.id) }}">
+            {{ delete_form.hidden_tag() }}
+            <button type="submit" class="btn btn--outline btn--sm" title="{{ 'Mark as read' if unread else 'Mark as unread' }}">
+              {{ 'Mark read' if unread else 'Mark unread' }}
+            </button>
+          </form>
+          <form method="post" action="{{ url_for('admin.message_delete', message_id=message.id) }}" onsubmit="return confirm('Delete this message? This action cannot be undone.');">
+            {{ delete_form.hidden_tag() }}
+            <button type="submit" class="btn btn--danger btn--sm">Delete</button>
+          </form>
+        </div>
+      </article>
+    {% else %}
+      <div class="admin-messages__empty">
+        <div class="admin-messages__empty-icon" aria-hidden="true">✉</div>
+        <h3>{{ 'No messages found' if search else 'Your inbox is empty' }}</h3>
+        <p>{{ 'Try a different search term.' if search else 'New contact messages will appear here.' }}</p>
+        {% if search %}<a href="{{ url_for('admin.messages_list') }}" class="btn btn--outline btn--sm">View all messages</a>{% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  {{ flask_pagination(pagination, 'admin.messages_list') }}
+</section>
 {% endblock %}
