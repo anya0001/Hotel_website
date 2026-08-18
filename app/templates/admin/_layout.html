@@ -22,7 +22,11 @@
       <a href="{{ url_for('admin.promotions_list') }}" class="{{ 'is-active' if request.endpoint == 'admin.promotions_list' }}">Promotions</a>
       <a href="{{ url_for('admin.faq_list') }}" class="{{ 'is-active' if request.endpoint == 'admin.faq_list' }}">FAQ</a>
       <a href="{{ url_for('admin.homepage_settings') }}" class="{{ 'is-active' if request.endpoint == 'admin.homepage_settings' }}">Homepage</a>
-      <a href="{{ url_for('admin.messages_list') }}" class="{{ 'is-active' if request.endpoint == 'admin.messages_list' }}">Messages</a>
+      <a href="{{ url_for('admin.messages_list') }}" class="admin-sidebar__messages {{ 'is-active' if request.endpoint in ['admin.messages_list', 'admin.message_detail'] }}">
+        <span>Messages</span>
+        {% set unread_count = ContactMessage.query.filter_by(is_read=False).count() %}
+        {% if unread_count > 0 %}<span class="admin-sidebar__badge">{{ unread_count }}</span>{% endif %}
+      </a>
       <hr>
       <a href="{{ url_for('hotel.home') }}">&larr; Back to Site</a>
     </nav>
