@@ -14,18 +14,24 @@
 </div>
 
 <div class="card-panel">
-  <table class="admin-table" id="messages-table">
+  <table class="admin-table admin-message-table" id="messages-table">
     <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Received</th><th></th></tr></thead>
     <tbody>
       {% for message in pagination.items %}
-        <tr>
-          <td>{{ message.name }}</td>
+        <tr class="{{ 'admin-message-row--unread' if message.id in unread_message_ids else '' }}">
+          <td class="admin-message-table__sender">{{ message.name }}</td>
           <td><a href="mailto:{{ message.email }}">{{ message.email }}</a></td>
           <td>{{ message.subject or '—' }}</td>
           <td class="admin-table__review">{{ message.message[:100] }}{{ '…' if message.message|length > 100 }}</td>
           <td>{{ message.created_at.strftime('%b %d, %Y') }}</td>
           <td class="admin-table__actions">
             <a href="{{ url_for('admin.message_detail', message_id=message.id) }}" class="btn btn--outline btn--sm">View</a>
+            <form method="post" action="{{ url_for('admin.message_toggle_read', message_id=message.id) }}">
+              {{ delete_form.hidden_tag() }}
+              <button type="submit" class="btn btn--outline btn--sm" title="{{ 'Mark as read' if message.id in unread_message_ids else 'Mark as unread' }}">
+                {{ 'Mark read' if message.id in unread_message_ids else 'Mark unread' }}
+              </button>
+            </form>
             <form method="post" action="{{ url_for('admin.message_delete', message_id=message.id) }}" onsubmit="return confirm('Delete this message? This action cannot be undone.');">
               {{ delete_form.hidden_tag() }}
               <button type="submit" class="btn btn--danger btn--sm">Delete</button>
